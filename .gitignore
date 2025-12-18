@@ -1,0 +1,14 @@
+# Keep !WORKDESK tracked (cloud agents work here)
+# Don't ignore !WORKDESK - it's where cloud agents work
+
+# Ignore runtime/temp directories
+_Runtime/
+terminals/
+.cursor/
+.vscode/
+
+# Ignore Obsidian metadata
+**/.obsidian/
+
+# Ignore Cursor/VSCode config (but keep .cursorrules)
+.cursorrules.emergency
