@@ -1,0 +1,48 @@
+# tools.yml :: Tool Registry (Mutable within Law Bounds)
+# Defines available tools that PHENO operations can execute
+# These are loaded at runtime and validated against core law contracts
+
+tool.file_operations:
+  id: file_operations
+  description: "File system operations (read, write, list, copy)"
+  cost: 1
+  contract:
+    inputs: ["path", "operation"]
+    outputs: ["result", "error"]
+    safety_level: "medium"
+
+tool.text_analysis:
+  id: text_analysis
+  description: "Text processing and analysis operations"
+  cost: 2
+  contract:
+    inputs: ["content", "analysis_type"]
+    outputs: ["analysis_result", "confidence"]
+    safety_level: "low"
+
+tool.evidence_binding:
+  id: evidence_binding
+  description: "Bind claims to evidence sources with confidence scoring"
+  cost: 3
+  contract:
+    inputs: ["claim", "evidence_sources"]
+    outputs: ["binding_result", "confidence_score", "unknowns"]
+    safety_level: "high"
+
+tool.receipt_writer:
+  id: receipt_writer
+  description: "Write PHENO receipts to persistent storage"
+  cost: 1
+  contract:
+    inputs: ["operation_data"]
+    outputs: ["receipt_id", "storage_result"]
+    safety_level: "high"
+
+tool.lex_registry:
+  id: lex_registry
+  description: "LEX namespace validation and registry operations"
+  cost: 2
+  contract:
+    inputs: ["namespace", "operation"]
+    outputs: ["validation_result", "registry_data"]
+    safety_level: "medium"

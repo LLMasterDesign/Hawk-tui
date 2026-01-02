@@ -1,0 +1,165 @@
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂///
+▛//▞▞ ⟦⎊⟧ :: ⧗-25.145 // AUTHORITY :: span{eₓ,e_z} XZ-Plane ▞▞
+
+▛▞// AUTHORITY :: ρ{Responders}.φ{Contracts}.τ{Permissions} ▹
+//▞⋮⋮ ⟦⚖️⟧ :: [responder.law] [permission.surface] [⊢ ⇨ ⟿ ▷]
+⫸ 〔plane.binding.xz〕
+
+```elixir
+/// Status: [ACTIVE] | Version: 1.0.0 | Authority: vec3.core | Created: ⧗-25.145
+/// module: authority.z3n | plane: XZ | permission.surface
+/// updated: ⧗-25.145 | AR: [on] | dispatch: authority.loader.ex
+```
+
+▛///▞ PRISM KERNEL ::
+//▞▞〔Position · Role · Intent · Structure · Modality〕
+P:: plane.binding{XZ} ∙ span{eₓ,e_z} ∙ permission.surface
+R:: responder.types.define ∙ contract.enforce ∙ permission.validate
+I:: intent.target=lawful.boundaries ∙ responders.auditors ∙ contract.bound
+S:: type.define → channel.assign → contract.apply → permission.check
+M:: mode.lawful ∙ no_override ∙ evidence.strengthens.authority
+:: ∎
+
+▛///▞ PLANE BINDING ::
+//▞ Coordinate Space
+type: span (subspace, not vector)
+spanning_vectors: [eₓ, e_z]
+coordinate: span{[1,0,0], [0,0,1]}
+semantic: identity + evidence = permission
+translates: false
+
+//▞ Authority Surface
+binding: XZ-plane couples identity (X-axis) to evidence (Z-axis)
+constraint: Permission decisions are evidence-validated
+enforcement: Authority is plane, not vector
+violation: AUTHORITY_FAULT
+:: ∎
+
+▛///▞ ρ{Responders} :: Responder Types
+
+//▞ λ.guard (Lambda Guard)
+symbol: λ
+channel: CH3
+role: Policy enforcement and safety validation
+capabilities:
+  can_block: true
+  can_emit: [warnings, policy_flags, refusals]
+contract: May refuse publication, must provide reason
+binding: Runs after receipt exists
+
+//▞ ν.audit (Nu Audit)
+symbol: ν
+channel: CH3
+role: Evidence verification and claim auditing
+capabilities:
+  can_block: false
+  can_emit: [audit_notes, confidence_scores, unknown_flags]
+contract: Verifies claims, cannot block
+binding: Runs after receipt exists
+
+//▞ τ.editor (Tau Editor)
+symbol: τ
+channel: CH4
+role: Corrections and amendments
+capabilities:
+  can_block: false
+  can_emit: [patches, diffs, corrections]
+contract: Proposes changes, does not overwrite primary
+binding: Writes to CH4 only, never CH2
+
+//▞ ρ.echo (Rho Echo)
+symbol: ρ
+channel: CH3
+role: Reflection and summary
+capabilities:
+  can_block: false
+  can_emit: [summaries, reflections, context_notes]
+contract: Summarizes, does not add new claims
+binding: Runs after receipt exists
+:: ∎
+
+▛///▞ φ{Contracts} :: Responder Laws
+
+//▞ Responder Laws
+L1: Responders only run after receipt exists
+L2: Responders only write to assigned channels
+L3: Responders cannot overwrite CH2 primary
+L4: Patches live in CH4, never hidden in primary
+L5: Only λ.guard may block publication
+
+rule: These contracts are immutable
+enforcement: Kernel validates responder actions against contracts
+violation: AUTHORITY_FAULT
+
+//▞ Execution Sequence
+1. Primary operation completes → receipt emitted
+2. Responders triggered in order: ν.audit → λ.guard → ρ.echo
+3. τ.editor runs if corrections needed
+4. All responder output written to assigned channels
+5. Responder receipt appended to primary receipt
+
+//▞ Contract Validation
+- Check responder against permission matrix
+- Verify channel assignment
+- Validate that receipt exists before responder runs
+- Ensure no overwrites of primary output
+:: ∎
+
+▛///▞ τ{Permissions} :: Permission Matrix
+
+//▞ Channel Permissions
+λ.guard: [CH3]
+ν.audit: [CH3]
+τ.editor: [CH4]
+ρ.echo: [CH3]
+
+rule: Responders may ONLY write to assigned channels
+enforcement: Channel validator checks before write
+violation: AUTHORITY_FAULT
+
+//▞ Action Permissions
+block_publish: [λ.guard]
+flag_unknown: [ν.audit]
+emit_patch: [τ.editor]
+summarize: [ρ.echo]
+
+rule: Only λ.guard may block publication
+enforcement: Block request validated against permission matrix
+violation: AUTHORITY_FAULT
+
+//▞ Evidence Requirements
+- λ.guard must cite policy when blocking
+- ν.audit must reference evidence sources
+- τ.editor must diff against primary
+- ρ.echo must not introduce new claims
+
+enforcement: Evidence validator checks responder output
+violation: EVIDENCE_FAULT if missing evidence
+:: ∎
+
+▛///▞ ENFORCEMENT ::
+
+//▞ Authority Doctrine
+- Authority is plane (span), not vector
+- Responders are auditors, not characters
+- Contract violation = AUTHORITY_FAULT
+- Evidence strengthens authority (monotonic)
+
+//▞ Permission Guards
+- Responders cannot run before receipt exists
+- Responders cannot write to forbidden channels
+- Only λ.guard may block publication
+- All responder actions must be evidence-backed
+
+enforcement: Kernel validates before responder execution
+violation: AUTHORITY_FAULT if contract violated
+
+//▞ Recovery
+- AUTHORITY_FAULT: Contract violation detected
+- System refuses responder action
+- Fault receipt documents violation
+- Primary operation remains valid
+- System remains in recoverable state
+:: ∎
+
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂〘・.°𝚫〙

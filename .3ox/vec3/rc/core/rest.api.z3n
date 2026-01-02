@@ -1,0 +1,381 @@
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂///
+▛//▞▞ ⟦⎊⟧ :: ⧗-25.145 // REST.API :: Control Plane Specification ▞▞
+
+▛▞// REST.API :: ρ{Interface}.φ{Endpoints}.τ{Security} ▹
+//▞⋮⋮ ⟦🌐⟧ :: [control.plane] [interface.boundary] [⊢ ⇨ ⟿ ▷]
+⫸ 〔control.plane.specification〕
+
+```elixir
+/// Status: [ACTIVE] | Version: 1.0.0 | Authority: vec3.core | Created: ⧗-25.145
+/// module: rest.api.z3n | type: control.plane.spec
+/// updated: ⧗-25.145 | AR: [on] | dispatch: api.loader.ex
+```
+
+▛///▞ PRISM KERNEL ::
+//▞▞〔Position · Role · Intent · Structure · Modality〕
+P:: control.plane ∙ interface.boundary ∙ stable.contract
+R:: interface.stable ∙ job.submit ∙ receipt.expose
+I:: intent.target=3ox.callable ∙ service.interface ∙ auditable.bridge
+S:: submit.job → execute.async → receipt.write → respond.status
+M:: mode.rest_to_files ∙ watcher.canonical ∙ receipt.truth
+:: ∎
+
+▛///▞ ρ{Interface} :: Architecture
+
+//▞ Three Planes (Clean Stratification)
+control_plane: REST API — stable interface boundary
+execution_plane: Folder watchers — canonical engine
+truth_plane: Receipts — source of truth
+human_plane: AJAX — visibility and control
+
+//▞ Mode A: REST → Ingress Files → Watchers
+flow:
+  1. POST /v1/jobs → creates vec3/var/queue/<job_id>.job.json
+  2. Watcher sees job file, routes to execution
+  3. Agents run, write outputs and receipts
+  4. REST reads receipts, returns status
+
+benefits:
+  - One execution path
+  - Watcher remains single engine
+  - Every job reproducible from disk
+  - Full auditability
+
+rule: HTTP response is fast confirmation
+      Receipt file is the truth
+
+//▞ Binding Configuration
+server:
+  bind: 127.0.0.1:7777  # Local-only by default
+  protocol: HTTP/1.1
+  base_path: /v1
+  
+enforcement: No LAN/public until deliberately opened
+violation: SECURITY_FAULT if exposed without auth
+:: ∎
+
+▛///▞ φ{Endpoints} :: API Contract
+
+//▞ Health & Version
+GET /health
+  response: { status: ok, sirius: ⧗-25.145, capsule_id: cmd.bridge.pheno.v1 }
+  purpose: Liveness check
+
+GET /v1/version
+  response:
+    version: 1.0.0
+    capsule_id: cmd.bridge.pheno.v1
+    engine: vec3.engine.z3n
+  purpose: Version info for clients
+
+//▞ Job Submission
+POST /v1/jobs
+  request:
+    op: VSO.AUDIT
+    inputs: [{ path: /path/to/input.pdf }]
+    params: { mode: strict, seal: true }
+    pheno: ρ{input.data}.φ{audit.strict}.τ{output.sealed}
+    route: 0ut.3ox
+    idempotency_key: optional-client-key
+  
+  response:
+    job_id: ⧗-25.145-9b2c
+    status: queued
+    receipt_path: vec3/var/receipts/⧗-25.145-9b2c.receipt.json
+    queued_at: ⧗-25.145
+  
+  behavior:
+    - Creates vec3/var/queue/<job_id>.job.json
+    - Watcher picks up and routes
+    - Idempotency: same key → same job (no duplicates)
+  
+  status_codes:
+    201: Job created and queued
+    400: Invalid request body
+    401: Unauthorized (missing/invalid token)
+    429: Rate limit exceeded
+
+//▞ Job Status
+GET /v1/jobs/{job_id}
+  response:
+    job_id: ⧗-25.145-9b2c
+    status: running|queued|done|failed
+    progress: 0.42
+    stage: validate|transform|harden|project
+    started_at: ⧗-25.145
+    updated_at: ⧗-25.145
+    
+  status_values:
+    queued: Job file written, waiting for watcher
+    running: Execution in progress
+    done: Completed successfully, receipt available
+    failed: Failed with FAULT, receipt available
+  
+  status_codes:
+    200: Job found
+    404: Job not found
+    401: Unauthorized
+
+//▞ Receipt Retrieval
+GET /v1/jobs/{job_id}/receipt
+  response: <receipt JSON from vec3/var/receipts/>
+  
+  note: Serves the actual receipt file written by tape governor
+  
+  status_codes:
+    200: Receipt found
+    404: Receipt not yet available or job not found
+    401: Unauthorized
+
+//▞ Log Tailing
+GET /v1/logs/tail
+  params:
+    since: ⧗-25.144  # Sirius timestamp
+    lines: 100
+  response:
+    entries: [{ ts: ⧗-25.145, level: INFO, msg: ... }]
+  
+  purpose: Real-time log access for debugging
+
+GET /v1/events (SSE)
+  content_type: text/event-stream
+  events:
+    - job.queued
+    - job.started
+    - job.progress
+    - job.done
+    - job.failed
+    - log.entry
+  
+  purpose: Live updates without polling
+
+//▞ Registry & Discovery
+GET /v1/ops
+  response:
+    operators: [VSO.AUDIT, VSO.TRANSFORM, PHENO.VALIDATE, ...]
+  
+  purpose: List available operations
+
+GET /v1/capsules
+  response:
+    capsules: [{ id: cmd.bridge.pheno.v1, version: 1.0.0 }]
+  
+  purpose: List available capsules
+
+GET /v1/registry
+  response:
+    tools: <from tools.yml>
+    routes: <from routes.json>
+    limits: <from limits.toml>
+  
+  purpose: Full registry snapshot for explorability
+:: ∎
+
+▛///▞ τ{Security} :: Access Control
+
+//▞ Local-Only Default
+binding:
+  default: 127.0.0.1:7777
+  lan_exposure: false
+  public_exposure: false
+  
+rule: No LAN/public until deliberately opened
+enforcement: Bind validator checks configuration
+violation: SECURITY_FAULT if exposed without auth
+
+//▞ Bearer Token Auth
+auth:
+  type: bearer
+  header: Authorization: Bearer <token>
+  token_source: .3ox/3ox.key
+  
+validation:
+  missing_token: 401 Unauthorized
+  invalid_token: 403 Forbidden
+  
+note: Even locally, random processes cannot spam the engine
+
+//▞ CORS Rules
+cors:
+  mode: same-origin-preferred
+  
+  options:
+    same_origin: Serve UI from same origin as API (simplest)
+    trusted_origin: Allow single trusted origin
+    
+  headers:
+    Access-Control-Allow-Origin: http://127.0.0.1:7777
+    Access-Control-Allow-Methods: GET, POST, OPTIONS
+    Access-Control-Allow-Headers: Content-Type, Authorization
+
+//▞ Rate Limiting
+rate_limit:
+  window: 1m
+  max_requests: 60
+  
+  purpose: Prevent accidental infinite loops in UI
+  
+  response_on_exceeded:
+    status: 429
+    body: { error: rate_limit_exceeded, retry_after: 30 }
+
+//▞ Idempotency
+idempotency:
+  header: Idempotency-Key
+  behavior: Same key → same job, no duplicates
+  storage: vec3/var/state/idempotency.json
+  ttl: 24h
+  
+purpose: Networks are unreliable. Humans double-click.
+
+enforcement: Idempotency checker validates before job creation
+violation: DUPLICATE_JOB if key collision without idempotency
+:: ∎
+
+▛///▞ JOB FILE SCHEMA ::
+
+//▞ vec3/var/queue/<job_id>.job.json
+job_id: ⧗-25.145-9b2c
+op: VSO.AUDIT
+inputs: [{ path: /path/to/input.pdf }]
+params: { mode: strict, seal: true }
+pheno: ρ{input.data}.φ{audit.strict}.τ{output.sealed}
+route: 0ut.3ox
+submitted_at: ⧗-25.145
+source: rest_api
+idempotency_key: optional-client-key
+
+purpose: Persisted job request for watcher pickup
+format: JSON
+location: vec3/var/queue/
+naming: {job_id}.job.json
+
+//▞ Job ID Format
+format: ⧗-YY.SSS-{base36_hash}
+example: ⧗-25.145-9b2c
+components:
+  - ⧗-YY.SSS: Sirius timestamp
+  - base36_hash: xxh64 truncated to 8 chars
+
+properties:
+  - Sortable by time
+  - Globally unique (with high probability)
+  - URL-safe
+:: ∎
+
+▛///▞ RECEIPT INTEGRATION ::
+
+//▞ REST Response vs Receipt Truth
+response_role: Fast confirmation + job_id
+receipt_role: Source of truth
+
+rule: REST exposes receipts, does not replace them
+
+receipt_fields:
+  - job_id
+  - op
+  - inputs (paths, hashes)
+  - params
+  - pheno
+  - route
+  - started_at
+  - finished_at
+  - status
+  - artifacts_written
+  - seal_info
+
+//▞ Receipt Serving
+- REST serves receipt JSON from vec3/var/receipts/
+- No transformation: receipt is immutable truth
+- Clients parse receipt for detailed results
+- Receipt includes PiCO trace for auditability
+:: ∎
+
+▛///▞ IMPLEMENTATION STAGES ::
+
+//▞ Stage 1: Hello Brain
+endpoints:
+  - GET /health
+  - GET /v1/version
+status: Proves server runs
+implementation: Ruby WEBrick (current), Rust axum (future)
+
+//▞ Stage 2: Job Submit
+endpoints:
+  - POST /v1/jobs (writes ingress file)
+  - GET /v1/jobs/{id} (reads receipt/status)
+status: Core functionality
+implementation: Job file writer + receipt reader
+
+//▞ Stage 3: AJAX Console
+ui: Single page that submits job and polls status
+status: Proves the bridge
+implementation: console.html (current)
+
+//▞ Stage 4: Events Stream
+endpoints:
+  - GET /v1/events (SSE)
+status: Live updates without polling
+implementation: Server-Sent Events for real-time updates
+
+//▞ Stage 5: Registry Browsing
+endpoints:
+  - GET /v1/ops
+  - GET /v1/capsules
+  - GET /v1/registry
+status: Explorability — prevents "1500 docs, no map" syndrome
+implementation: Registry readers + JSON serializers
+:: ∎
+
+▛///▞ TECHNOLOGY RECOMMENDATION ::
+
+//▞ Rust (axum) — Long-term
+reason: brains.rs is core, keep single-language
+framework: axum or actix-web
+benefits:
+  - Clean performance
+  - Easy localhost binding
+  - Clear typing for job schema
+  - Async/await for SSE
+  - Low memory footprint
+
+//▞ Ruby (WEBrick) — Current Prototype
+reason: Fast to get running for testing
+framework: WEBrick (stdlib)
+status: Current implementation for console.html
+note: Still spawns brains.exe or writes job files
+migration: Replace with Rust axum when ready
+
+//▞ Node (Fastify) — Not Recommended
+reason: Adds another runtime
+use_case: Only if JavaScript mandatory
+note: Would still spawn brains.exe or write job files
+:: ∎
+
+▛///▞ DOCTRINE ::
+
+//▞ Architectural Principles
+REST = Control Plane (stable interface boundary)
+Watchers = Execution Plane (canonical engine)
+Receipts = Truth Plane (proof of execution)
+AJAX = Human Plane (visibility and control)
+
+"Your receipts are your constitution.
+ REST is the courthouse window."
+
+//▞ Enforcement
+- REST writes job files, never executes directly
+- Watchers are the single execution path
+- Receipts are immutable after write
+- REST serves receipts read-only
+- No operation completes without receipt
+
+//▞ Recovery
+- Job file persists if REST crashes
+- Watcher picks up jobs on restart
+- Receipts survive all restarts
+- Client can re-query with job_id
+- Idempotency prevents duplicate submissions
+:: ∎
+
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂〘・.°𝚫〙

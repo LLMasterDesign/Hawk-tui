@@ -1,0 +1,17 @@
+{
+  "job_id": "⧗-25.145-a2d497cf",
+  "op": "FINAL.TEST",
+  "status": "done",
+  "pheno": {
+  },
+  "route": "0ut.3ox",
+  "started_at": "2025-12-31T12:37:51-06:00",
+  "finished_at": "2025-12-31T12:37:54-06:00",
+  "artifacts": [
+    "⧗-25.145-a2d497cf.output"
+  ],
+  "seal": {
+    "type": "sha256",
+    "value": "bcf0d4efdf13370787bc0fa89217c72b66fa055dc96d1caac4cf0c0a3b638872"
+  }
+}

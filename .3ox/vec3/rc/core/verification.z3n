@@ -1,0 +1,158 @@
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂///
+▛//▞▞ ⟦⎊⟧ :: ⧗-25.145 // VERIFICATION :: vec3(0,0,1) Z-Axis ▞▞
+
+▛▞// VERIFICATION :: ρ{Evidence}.φ{Schema}.τ{Receipt} ▹
+//▞⋮⋮ ⟦📜⟧ :: [evidence.law] [receipt.mandatory] [⊢ ⇨ ⟿ ▷]
+⫸ 〔binding.vector.z.axis〕
+
+```elixir
+/// Status: [ACTIVE] | Version: 1.0.0 | Authority: vec3.core | Created: ⧗-25.145
+/// module: verification.z3n | axis: Z | evidence.vector
+/// updated: ⧗-25.145 | AR: [on] | dispatch: verification.loader.ex
+```
+
+▛///▞ PRISM KERNEL ::
+//▞▞〔Position · Role · Intent · Structure · Modality〕
+P:: axis.binding{Z} ∙ vec3(0,0,1) ∙ evidence.vector
+R:: witness.mandate ∙ artifact.define ∙ proof.require
+I:: intent.target=operation.verifiable ∙ receipt.mandatory ∙ claim.bound
+S:: evidence.collect → schema.apply → receipt.emit
+M:: mode.mandatory ∙ monotonic.evidence ∙ no_silent_ops
+:: ∎
+
+▛///▞ VECTOR BINDING ::
+//▞ Coordinate Space
+axis: Z (evidence binding vector)
+coordinate: [0, 0, 1]
+type: direction (w=0)
+translates: false
+semantic: evidence anchor — PROVE
+
+//▞ Plane Participation
+XZ.plane = span{eₓ, e_z} → authority.z3n (identity + evidence)
+YZ.plane = span{eᵧ, e_z} → kernel.z3n   (execution + evidence)
+:: ∎
+
+▛///▞ ρ{Evidence} :: Evidence Requirements
+
+//▞ Evidence Principles
+E1: All operations produce receipts
+E2: Evidence is monotonic (cannot decrease)
+E3: Claims must bind to evidence sources
+E4: Unknowns are explicitly flagged, not hidden
+
+rule: No silent operations permitted
+enforcement: Receipt emission checked in ▷ phase
+violation: EVIDENCE_FAULT
+
+//▞ Evidence Types
+direct_observation: Data from primary sources
+derived_claim: Inference from evidence
+unknown_flag: Insufficient evidence marker
+fault_record: System error documentation
+
+classification: Every artifact tagged with evidence type
+binding: Claims reference evidence sources
+:: ∎
+
+▛///▞ φ{Schema} :: Receipt Schema
+
+//▞ Receipt Structure
+receipt_id: xxh64 hash
+timestamp_sirius: ⧗-YY.SSS
+core_version: 1.0.0
+op_name: operation identifier
+lex_namespace: LEX.{domain}
+
+pico_trace:
+  acquire:
+    inputs: []
+    evidence_count: 0
+  transform:
+    claims: []
+    bindings: {}
+  harden:
+    guards_applied: []
+    unknowns: []
+  project:
+    artifacts: []
+    endstate: ""
+
+claims_count: 0
+unknowns_count: 0
+policy_flags: []
+endstate: SUCCESS|REFUSAL|UNKNOWN|FAULT
+artifacts_emitted: []
+
+//▞ Integrity Fields
+inputs_hash: xxh64 of input payload
+outputs_hash: xxh64 of output artifacts
+trace_hash: xxh64 of pico_trace
+
+purpose: Tamper detection
+enforcement: Hashes computed at ▷ phase
+violation: INTEGRITY_FAULT if mismatch detected
+
+//▞ Schema Validation
+- Receipt must conform to schema before emission
+- All fields must be present (no optional fields)
+- Unknown counts must match Unknown.List length
+- EndState must be one of four valid values
+:: ∎
+
+▛///▞ τ{Receipt} :: Receipt Requirements
+
+//▞ Mandatory Receipt
+- Receipt emission occurs in ▷ phase
+- Receipt reflects complete PiCO traversal
+- Receipt is mandatory for ALL endstates
+- No receipt = FAULT condition
+
+enforcement: Kernel blocks completion until receipt written
+violation: EVIDENCE_FAULT
+
+//▞ Receipt Storage
+primary: vec3/var/receipts/
+backup: redis (if available)
+format: JSON
+retention: permanent
+
+file_naming: {receipt_id}.receipt.json
+access: read-only after write
+indexing: by receipt_id, op_name, timestamp
+
+//▞ Receipt Queries
+by_id: Direct lookup via receipt_id
+by_operation: Filter by op_name
+by_timerange: Filter by timestamp_sirius
+by_endstate: Filter by endstate value
+
+purpose: Auditability and forensics
+:: ∎
+
+▛///▞ ENFORCEMENT ::
+
+//▞ Verification Doctrine
+- Verification is direction (w=0): translation forbidden
+- Evidence is monotonic: cannot be decreased
+- Receipt is mandatory: no operation completes without
+- Unknowns are explicit: never hidden or suppressed
+
+//▞ Receipt Guards
+- Every operation MUST produce receipt
+- Receipt MUST include PiCO trace
+- Receipt MUST include endstate
+- Receipt MUST include integrity hashes
+
+enforcement: Kernel validates receipt before ▷ completion
+violation: EVIDENCE_FAULT if receipt invalid or missing
+
+//▞ Recovery
+- EVIDENCE_FAULT: Receipt missing or invalid
+- System refuses to complete ▷ phase
+- Fault receipt created documenting failure
+- Operation marked as FAULT endstate
+- System remains in valid state
+:: ∎
+
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂〘・.°𝚫〙

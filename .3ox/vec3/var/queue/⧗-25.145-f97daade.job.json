@@ -1,0 +1,15 @@
+{
+  "job_id": "⧗-25.145-f97daade",
+  "op": "PHENO.VALIDATE",
+  "inputs": [
+
+  ],
+  "pheno": {
+    "rho": "test.data",
+    "phi": "log.write",
+    "tau": "receipt"
+  },
+  "route": "0ut.3ox",
+  "submitted_at": "⧗-25.145",
+  "source": "rest_api"
+}

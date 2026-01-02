@@ -1,0 +1,162 @@
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂///
+▛//▞▞ ⟦⎊⟧ :: ⧗-25.125 // PHENO.COMPILER :: Core Processing Logic ▞▞
+
+▛▞// PHENO.COMPILER :: ρ{Input}.φ{Bind}.τ{Output} ▹
+⫸ 〔pheno.operation.compiler〕
+
+# PHENO COMPILER: Core Processing Logic
+
+## ρ{Input} :: Input Processing
+
+Input.Acquisition::
+  - **lex.namespace**: Domain identifier (LEX.{industry})
+  - **raw.tokens**: Input triplet {identity, function, scope, method, modality}
+  - **runtime.context**: Execution environment and constraints
+  - **evidence.sources**: Supporting documents and references
+
+Input.Normalization::
+  - validate lex.namespace format: LEX.{[a-zA-Z_][a-zA-Z0-9_]*}
+  - normalize tokens into PHENO triplet
+  - index evidence sources for claim binding
+  - establish execution context bounds
+
+## φ{Bind} :: Binding Logic
+
+### Slot Mapping (Immutable)
+PHENO.Slots::
+  ρ{Input}   → identity, namespace, input.contract
+  φ{Bind}    → function, transformation.logic, binding.rules
+  τ{Output}  → scope, artifacts, output.contract
+  ν{Resilience} → method, fallback.handlers, unknown.recovery
+  λ{Governance} → modality, policy.filters, safety.gates
+
+### Triplet Processing
+Triplet.Validation::
+  - verify triplet completeness: {ρ φ τ} minimum required
+  - validate slot compatibility: ν and λ enhance but don't replace ρφτ
+  - check namespace validity: must resolve in LEX registry
+  - enforce binding contracts: slots must satisfy their type contracts
+
+Triplet.Binding::
+  - ρ→identity: Extract core identity from input
+  - φ→function: Map to operational function
+  - τ→scope: Determine output scope and boundaries
+  - ν→method: Select resilience approach (if needed)
+  - λ→modality: Apply governance constraints
+
+## τ{Output} :: Artifact Generation
+
+### Capsule Rendering
+Capsule.Types::
+  - **success.capsule**: Normal operation result
+  - **refusal.capsule**: λ{Governance} blocked operation
+  - **unknown.capsule**: ν{Resilience} insufficient evidence
+  - **fault.capsule**: System error or contract violation
+
+### Artifact Schema
+Artifact.Structure::
+  ```json
+  {
+    "artifact_id": "uuid-v4",
+    "pheno_version": "1.0.0",
+    "lex_namespace": "LEX.{domain}",
+    "bindings": {
+      "rho": {...},
+      "phi": {...},
+      "tau": {...},
+      "nu": {...},
+      "lambda": {...}
+    },
+    "capsule": {
+      "type": "success|refusal|unknown|fault",
+      "content": "...",
+      "evidence_bindings": [...]
+    },
+    "metadata": {
+      "created_at": "ISO8601",
+      "execution_time_ms": 123,
+      "evidence_count": 5
+    }
+  }
+  ```
+
+## ν{Resilience} :: Unknown Handling
+
+Unknown.Detection::
+  - scan claims for evidence binding
+  - identify claims without sufficient support
+  - categorize unknowns: missing_evidence, conflicting_evidence, insufficient_confidence
+
+Unknown.Recovery::
+  - **clarify.request**: Ask for additional evidence
+  - **degraded.publish**: Continue with unknown markers
+  - **fallback.response**: Use conservative defaults
+  - **re-validate**: Request human verification
+
+## λ{Governance} :: Policy Enforcement
+
+Policy.Checks::
+  - **namespace.allowed**: Verify domain permissions
+  - **content.safety**: Check for restricted content
+  - **evidence.threshold**: Enforce minimum evidence requirements
+  - **output.contract**: Validate artifact compliance
+
+Policy.Actions::
+  - **allow**: Continue normal processing
+  - **flag**: Continue with warnings
+  - **block**: Emit refusal capsule
+  - **audit**: Log for review
+
+## PiCO Integration
+
+Compiler.PiCO::
+  - **⊢**: Input acquisition and normalization
+  - **⇨**: Slot mapping and triplet binding
+  - **⟿**: ν+λ validation and contract checking
+  - **▷**: Artifact rendering and capsule emission
+
+## Error Handling
+
+Compiler.Errors::
+  - **input.invalid**: Malformed or missing required inputs
+  - **binding.failed**: Cannot map triplet to valid slots
+  - **contract.violation**: Output doesn't satisfy contracts
+  - **evidence.insufficient**: Claims lack required support
+
+## Implementation Examples
+
+### Basic PHENO Operation
+```
+Input: LEX.{lighting} with tokens {identity, function, scope}
+Process: Map to ρ→identity, φ→function, τ→scope
+Validate: Check evidence, apply policies
+Output: Success capsule with binding schema
+```
+
+### Refusal Case
+```
+Input: Restricted LEX.{classified} domain
+Process: λ check fails on namespace permission
+Validate: Policy blocks publication
+Output: Refusal capsule with policy reason
+```
+
+### Unknown Case
+```
+Input: Claim without evidence support
+Process: ν detects insufficient evidence
+Validate: Marks as unknown, allows degraded publish
+Output: Unknown capsule with evidence gaps noted
+```
+
+## Extension Points
+
+Compiler.Extensions::
+  - **custom.validators**: Domain-specific validation logic
+  - **evidence.binders**: Specialized evidence processing
+  - **capsule.renderers**: Custom output formats
+  - **policy.plugins**: Domain-specific governance rules
+
+:: ∎
+
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂〘・.°𝚫〙

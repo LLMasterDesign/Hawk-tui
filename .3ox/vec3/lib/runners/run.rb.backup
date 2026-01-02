@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+# run.rb :: PHENO Capsule Launcher
+# Delegates to vec3/ microkernel OS
+
+exec('./vec3/lib/runners/run.rb', *ARGV)

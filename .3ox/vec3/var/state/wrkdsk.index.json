@@ -1,0 +1,25 @@
+{
+  "wrkdsk_bridge_version": "1.0.0",
+  "host_path": "../../../!WORKDESK",
+  "runtime_path": "../wrkdsk",
+  "last_sync": "2025-12-31T12:00:00Z",
+  "sync_mode": "mirror",
+  "dedupe_ledger": {
+    "file_hashes": {},
+    "processed_files": [],
+    "ignored_patterns": [
+      "*.log",
+      "*.tmp",
+      ".git/**",
+      "node_modules/**",
+      "*.swp",
+      "*.bak"
+    ]
+  },
+  "sync_stats": {
+    "files_synced": 0,
+    "bytes_transferred": 0,
+    "last_sync_duration_ms": 0,
+    "errors_count": 0
+  }
+}

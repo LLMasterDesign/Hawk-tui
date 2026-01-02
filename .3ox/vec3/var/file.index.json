@@ -1,0 +1,795 @@
+{
+  "index_version": "1.0.0",
+  "generated_at": "2025-12-31T22:46:13Z",
+  "3ox_root": ".",
+  "file_inventory": {
+    "3ox.key": {
+      "size_bytes": 278,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:51:05Z",
+      "xxh64": "72182f44bc46fe97",
+      "type": "file"
+    },
+    "3ox.log": {
+      "size_bytes": 525,
+      "permissions": "777",
+      "modified_at": "2025-12-31T16:48:09Z",
+      "xxh64": "254adb3ad87c2295",
+      "type": "file"
+    },
+    "brains.rs": {
+      "size_bytes": 1219,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:50:56Z",
+      "xxh64": "b659f88f7eb47ddb",
+      "type": "file"
+    },
+    "limits.toml": {
+      "size_bytes": 1143,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:50:52Z",
+      "xxh64": "68b40aa2db644525",
+      "type": "file"
+    },
+    "routes.json": {
+      "size_bytes": 1676,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:50:52Z",
+      "xxh64": "22542f43d8070819",
+      "type": "file"
+    },
+    "run.rb": {
+      "size_bytes": 532,
+      "permissions": "777",
+      "modified_at": "2025-12-31T17:07:20Z",
+      "xxh64": "ecd214e62c9e90c7",
+      "type": "file"
+    },
+    "tools.yml": {
+      "size_bytes": 1391,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:50:52Z",
+      "xxh64": "02d4a3768ae687b1",
+      "type": "file"
+    },
+    "vec3/bin/generate_file_index.rb": {
+      "size_bytes": 1878,
+      "permissions": "777",
+      "modified_at": "2025-12-31T22:45:59Z",
+      "xxh64": "b08d25a52c456d26",
+      "type": "file"
+    },
+    "vec3/bin/rest.api.rb": {
+      "size_bytes": 4991,
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:39:36Z",
+      "xxh64": "09a13d55d81a074d",
+      "type": "file"
+    },
+    "vec3/bin/serve.console.rb": {
+      "size_bytes": 1516,
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:15:25Z",
+      "xxh64": "264087a4c585c9dc",
+      "type": "file"
+    },
+    "vec3/bin/sirius.clock.rb": {
+      "size_bytes": 353,
+      "permissions": "777",
+      "modified_at": "2025-12-31T16:36:44Z",
+      "xxh64": "716d52fc12033be1",
+      "type": "file"
+    },
+    "vec3/bin/start.console.sh": {
+      "size_bytes": 379,
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:15:25Z",
+      "xxh64": "68aaeb186c54e064",
+      "type": "file"
+    },
+    "vec3/boot/imprint.sh": {
+      "size_bytes": 5062,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:05:27Z",
+      "xxh64": "f660bd563472519f",
+      "type": "file"
+    },
+    "vec3/boot/install.sh": {
+      "size_bytes": 3268,
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:49:45Z",
+      "xxh64": "fa71e526fbeb9fe6",
+      "type": "file"
+    },
+    "vec3/boot/start.sh": {
+      "size_bytes": 4306,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:12:08Z",
+      "xxh64": "1024e4bee262f43e",
+      "type": "file"
+    },
+    "vec3/lib/runners/elixir.http.adapter.exs": {
+      "size_bytes": 3756,
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:49:45Z",
+      "xxh64": "3581a56cea0e851f",
+      "type": "file"
+    },
+    "vec3/lib/runners/receipt.writer.rb": {
+      "size_bytes": 4127,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:05:27Z",
+      "xxh64": "bb3ff00a898559f8",
+      "type": "file"
+    },
+    "vec3/lib/runners/run.rb": {
+      "size_bytes": 532,
+      "permissions": "777",
+      "modified_at": "2025-12-31T17:07:20Z",
+      "xxh64": "ecd214e62c9e90c7",
+      "type": "file"
+    },
+    "vec3/lib/runners/run.rb.backup": {
+      "size_bytes": 132,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:43:39Z",
+      "xxh64": "f622efe6c0039102",
+      "type": "file"
+    },
+    "vec3/lib/runners/wrkdsk.bridge.rb": {
+      "size_bytes": 4493,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:12:08Z",
+      "xxh64": "200b77490eb1f3f7",
+      "type": "file"
+    },
+    "vec3/lib/runners/wrkdsk.mirror.rb": {
+      "size_bytes": 5089,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:31:14Z",
+      "xxh64": "56cfbdbfb408b333",
+      "type": "file"
+    },
+    "vec3/rc/config/limits.toml": {
+      "size_bytes": 1143,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:31:14Z",
+      "xxh64": "68b40aa2db644525",
+      "type": "file"
+    },
+    "vec3/rc/config/personas/default.cfg": {
+      "size_bytes": 1219,
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:49:45Z",
+      "xxh64": "b659f88f7eb47ddb",
+      "type": "file"
+    },
+    "vec3/rc/config/personas/noctua.cfg": {
+      "size_bytes": 1831,
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:49:44Z",
+      "xxh64": "ade2dc8872e6c2ae",
+      "type": "file"
+    },
+    "vec3/rc/config/personas/raven.cfg": {
+      "size_bytes": 1696,
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:49:45Z",
+      "xxh64": "0451c8c2bde2de58",
+      "type": "file"
+    },
+    "vec3/rc/config/responders/lambda.guard.cfg": {
+      "size_bytes": 818,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:21:05Z",
+      "xxh64": "ae2663ff2f0aab36",
+      "type": "file"
+    },
+    "vec3/rc/config/responders/nu.audit.cfg": {
+      "size_bytes": 849,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:21:05Z",
+      "xxh64": "2df29cc1b9471170",
+      "type": "file"
+    },
+    "vec3/rc/config/responders/tau.editor.cfg": {
+      "size_bytes": 848,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:21:04Z",
+      "xxh64": "441563b252c67031",
+      "type": "file"
+    },
+    "vec3/rc/config/routes.json": {
+      "size_bytes": 1676,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:12:09Z",
+      "xxh64": "22542f43d8070819",
+      "type": "file"
+    },
+    "vec3/rc/config/tools.yml": {
+      "size_bytes": 1391,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:12:08Z",
+      "xxh64": "02d4a3768ae687b1",
+      "type": "file"
+    },
+    "vec3/rc/core/authority.z3n": {
+      "size_bytes": 5226,
+      "permissions": "777",
+      "modified_at": "2025-12-31T22:39:38Z",
+      "xxh64": "e500f48ffa819907",
+      "type": "file"
+    },
+    "vec3/rc/core/channels.z3n": {
+      "size_bytes": 4863,
+      "permissions": "777",
+      "modified_at": "2025-12-31T22:39:38Z",
+      "xxh64": "747d60a7e29c07f3",
+      "type": "file"
+    },
+    "vec3/rc/core/entity.core.z3n": {
+      "size_bytes": 4102,
+      "permissions": "777",
+      "modified_at": "2025-12-31T22:39:38Z",
+      "xxh64": "8f2c983f593c0a5f",
+      "type": "file"
+    },
+    "vec3/rc/core/kernel.z3n": {
+      "size_bytes": 4757,
+      "permissions": "777",
+      "modified_at": "2025-12-31T22:39:38Z",
+      "xxh64": "c7d677125d175c9a",
+      "type": "file"
+    },
+    "vec3/rc/core/process.z3n": {
+      "size_bytes": 5426,
+      "permissions": "777",
+      "modified_at": "2025-12-31T22:39:38Z",
+      "xxh64": "51366495613d5838",
+      "type": "file"
+    },
+    "vec3/rc/core/rest.api.z3n": {
+      "size_bytes": 10107,
+      "permissions": "777",
+      "modified_at": "2025-12-31T22:39:38Z",
+      "xxh64": "eea9f0b3cf51dd5b",
+      "type": "file"
+    },
+    "vec3/rc/core/schemas/claim.ledger.schema.json": {
+      "size_bytes": 4571,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:51:44Z",
+      "xxh64": "7ba07dba95699190",
+      "type": "file"
+    },
+    "vec3/rc/core/schemas/evidence.index.schema.json": {
+      "size_bytes": 2923,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:51:44Z",
+      "xxh64": "f6d1a2d7ae662e67",
+      "type": "file"
+    },
+    "vec3/rc/core/sparkfile/CMD.sparkfile.md": {
+      "size_bytes": 3644,
+      "permissions": "777",
+      "modified_at": "2025-12-31T22:39:38Z",
+      "xxh64": "fb78809843eca335",
+      "type": "file"
+    },
+    "vec3/rc/core/vec3.engine.z3n": {
+      "size_bytes": 5797,
+      "permissions": "777",
+      "modified_at": "2025-12-31T22:39:38Z",
+      "xxh64": "42c5fa359b3270c7",
+      "type": "file"
+    },
+    "vec3/rc/core/verification.z3n": {
+      "size_bytes": 4686,
+      "permissions": "777",
+      "modified_at": "2025-12-31T22:39:38Z",
+      "xxh64": "729645754898d8ba",
+      "type": "file"
+    },
+    "vec3/rc/manifest.json": {
+      "size_bytes": 1587,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:39:19Z",
+      "xxh64": "b477009f21fd6a34",
+      "type": "file"
+    },
+    "vec3/rc/modules/pheno.compiler.z3n": {
+      "size_bytes": 5193,
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:49:44Z",
+      "xxh64": "3b6dc278c9b5e855",
+      "type": "file"
+    },
+    "vec3/rc/modules/pico.trace.z3n": {
+      "size_bytes": 5673,
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:49:45Z",
+      "xxh64": "4fd72e0a4f900f67",
+      "type": "file"
+    },
+    "vec3/rc/modules/prism.kernel.z3n": {
+      "size_bytes": 6375,
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:49:44Z",
+      "xxh64": "9b9d4657d7689700",
+      "type": "file"
+    },
+    "vec3/rc/modules/redis.integration.z3n": {
+      "size_bytes": 4815,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:05:27Z",
+      "xxh64": "5b08f6c23b9f4303",
+      "type": "file"
+    },
+    "vec3/rc/package.json": {
+      "size_bytes": 650,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:36:51Z",
+      "xxh64": "303ca1384e4d1a72",
+      "type": "file"
+    },
+    "vec3/share/ui/ACCESS.md": {
+      "size_bytes": 3718,
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:15:25Z",
+      "xxh64": "a268fe1536fae1c1",
+      "type": "file"
+    },
+    "vec3/share/ui/console.html": {
+      "size_bytes": 28226,
+      "permissions": "777",
+      "modified_at": "2025-12-31T22:29:20Z",
+      "xxh64": "0d8cd815f8d486b7",
+      "type": "file"
+    },
+    "vec3/var/file.index.json": {
+      "size_bytes": 14072,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:27:39Z",
+      "xxh64": "4002fcde6f9fc132",
+      "type": "file"
+    },
+    "vec3/var/health/status.json": {
+      "size_bytes": 382,
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:49:45Z",
+      "xxh64": "6a946925369ebbab",
+      "type": "file"
+    },
+    "vec3/var/queue/test-manual.job.json": {
+      "size_bytes": 150,
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:22:11Z",
+      "xxh64": "08225878b05a1444",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-0a423330.job.json": {
+      "size_bytes": 240,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:43:26Z",
+      "xxh64": "b4cc1b4fce6ad1de",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-3cf133bf.job.json": {
+      "size_bytes": 221,
+      "permissions": "777",
+      "modified_at": "2025-12-31T19:36:18Z",
+      "xxh64": "7f322c1f43256a7e",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-45703f21.job.json": {
+      "size_bytes": 221,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:24:42Z",
+      "xxh64": "a080802ad80b6af7",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-5ec5744f.job.json": {
+      "size_bytes": 221,
+      "permissions": "777",
+      "modified_at": "2025-12-31T22:12:17Z",
+      "xxh64": "85b845be143d232b",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-66a745b8.job.json": {
+      "size_bytes": 242,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:34:56Z",
+      "xxh64": "db6f2f399569f5ac",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-6b8c855b.job.json": {
+      "size_bytes": 169,
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:35:56Z",
+      "xxh64": "18a63c1640500b00",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-7b414fd1.job.json": {
+      "size_bytes": 242,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:03:02Z",
+      "xxh64": "4548f690f8d8d237",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-9f913c46.job.json": {
+      "size_bytes": 198,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:47:10Z",
+      "xxh64": "38e3e2c4638306ad",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-a2d497cf.job.json": {
+      "size_bytes": 175,
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:37:49Z",
+      "xxh64": "bbafac70e5c4417d",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-a6a8e1a1.job.json": {
+      "size_bytes": 242,
+      "permissions": "777",
+      "modified_at": "2025-12-31T19:36:29Z",
+      "xxh64": "64cce672060815cd",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-b0f68cc8.job.json": {
+      "size_bytes": 242,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:08:21Z",
+      "xxh64": "c15f98e363c46fde",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-b1e007f3.job.json": {
+      "size_bytes": 221,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:34:45Z",
+      "xxh64": "f49ed78755868c6d",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-c88619c0.job.json": {
+      "size_bytes": 198,
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:26:39Z",
+      "xxh64": "8b48923af99d2511",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-da08367e.job.json": {
+      "size_bytes": 221,
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:33:58Z",
+      "xxh64": "9f3b0b38077a2b18",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-e1c239c9.job.json": {
+      "size_bytes": 221,
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:28:31Z",
+      "xxh64": "6949e2f3a7313572",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-f6f4687a.job.json": {
+      "size_bytes": 221,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:08:01Z",
+      "xxh64": "153b079640ed938e",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-f97daade.job.json": {
+      "size_bytes": 248,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:25:05Z",
+      "xxh64": "945c75448f30e73f",
+      "type": "file"
+    },
+    "vec3/var/queue/⧗-25.145-fc8d6f12.job.json": {
+      "size_bytes": 221,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:02:33Z",
+      "xxh64": "604738fe8ec9f82e",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-0a423330.receipt.json": {
+      "size_bytes": 449,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:43:31Z",
+      "xxh64": "f5a3f32ff859e30e",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-3cf133bf.receipt.json": {
+      "size_bytes": 430,
+      "permissions": "777",
+      "modified_at": "2025-12-31T19:36:23Z",
+      "xxh64": "fc08755d2d5f0830",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-45703f21.receipt.json": {
+      "size_bytes": 430,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:24:47Z",
+      "xxh64": "7d54b2e896111d4c",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-5ec5744f.receipt.json": {
+      "size_bytes": 430,
+      "permissions": "777",
+      "modified_at": "2025-12-31T22:12:22Z",
+      "xxh64": "a45bcbeebc5bfe46",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-66a745b8.receipt.json": {
+      "size_bytes": 451,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:35:01Z",
+      "xxh64": "0c7db6dc800619f5",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-6b8c855b.receipt.json": {
+      "size_bytes": 378,
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:36:01Z",
+      "xxh64": "a8af168fbf95dba8",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-7b414fd1.receipt.json": {
+      "size_bytes": 451,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:03:07Z",
+      "xxh64": "3971868127cf8e81",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-9f913c46.receipt.json": {
+      "size_bytes": 407,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:47:15Z",
+      "xxh64": "e6ab378091198d5f",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-a2d497cf.receipt.json": {
+      "size_bytes": 384,
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:37:54Z",
+      "xxh64": "fd54ee48530fd953",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-a6a8e1a1.receipt.json": {
+      "size_bytes": 451,
+      "permissions": "777",
+      "modified_at": "2025-12-31T19:36:34Z",
+      "xxh64": "9d6af27cc961575e",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-b0f68cc8.receipt.json": {
+      "size_bytes": 451,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:08:26Z",
+      "xxh64": "209a29605cc89b25",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-b1e007f3.receipt.json": {
+      "size_bytes": 430,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:34:50Z",
+      "xxh64": "7ebb82a50061bf8d",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-c88619c0.receipt.json": {
+      "size_bytes": 407,
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:26:44Z",
+      "xxh64": "317d233a01092bd5",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-da08367e.receipt.json": {
+      "size_bytes": 430,
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:34:03Z",
+      "xxh64": "017c4dfc3bbbf62d",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-e1c239c9.receipt.json": {
+      "size_bytes": 430,
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:28:36Z",
+      "xxh64": "5da49dbbe4cb12c4",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-f6f4687a.receipt.json": {
+      "size_bytes": 430,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:08:06Z",
+      "xxh64": "2159bf88e309eaf8",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-f97daade.receipt.json": {
+      "size_bytes": 457,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:25:10Z",
+      "xxh64": "609543fd3b407a72",
+      "type": "file"
+    },
+    "vec3/var/receipts/⧗-25.145-fc8d6f12.receipt.json": {
+      "size_bytes": 430,
+      "permissions": "777",
+      "modified_at": "2025-12-31T21:02:38Z",
+      "xxh64": "dde8fd5f610fb83c",
+      "type": "file"
+    },
+    "vec3/var/state/system.json": {
+      "size_bytes": 316,
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:49:45Z",
+      "xxh64": "90a22d3b185393a8",
+      "type": "file"
+    },
+    "vec3/var/state/wrkdsk.index.json": {
+      "size_bytes": 507,
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:12:08Z",
+      "xxh64": "1f9effc867481e59",
+      "type": "file"
+    }
+  },
+  "directory_structure": {
+    "vec3": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:11:06Z"
+    },
+    "vec3/bin": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T22:44:50Z"
+    },
+    "vec3/boot": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:02:40Z"
+    },
+    "vec3/dev": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:39:01Z"
+    },
+    "vec3/dev/fixtures": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:39:01Z"
+    },
+    "vec3/dev/tests": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:39:01Z"
+    },
+    "vec3/lib": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T17:59:29Z"
+    },
+    "vec3/lib/runners": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T22:41:01Z"
+    },
+    "vec3/rc": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:52:00Z"
+    },
+    "vec3/rc/config": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:11:10Z"
+    },
+    "vec3/rc/config/personas": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:12:46Z"
+    },
+    "vec3/rc/config/responders": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:13:52Z"
+    },
+    "vec3/rc/core": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T17:36:03Z"
+    },
+    "vec3/rc/core/schemas": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T16:36:11Z"
+    },
+    "vec3/rc/core/sparkfile": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T16:36:11Z"
+    },
+    "vec3/rc/modules": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:02:06Z"
+    },
+    "vec3/share": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T17:37:39Z"
+    },
+    "vec3/share/doc": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:50:46Z"
+    },
+    "vec3/share/ui": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:14:54Z"
+    },
+    "vec3/var": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T18:00:11Z"
+    },
+    "vec3/var/cache": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:39:00Z"
+    },
+    "vec3/var/health": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:44:56Z"
+    },
+    "vec3/var/locks": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:39:00Z"
+    },
+    "vec3/var/log": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:50:46Z"
+    },
+    "vec3/var/queue": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T22:12:17Z"
+    },
+    "vec3/var/receipts": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T22:12:22Z"
+    },
+    "vec3/var/state": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T15:07:33Z"
+    },
+    "vec3/var/tmp": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:39:01Z"
+    },
+    "vec3/var/wrkdsk": {
+      "type": "directory",
+      "permissions": "777",
+      "modified_at": "2025-12-31T14:38:59Z"
+    }
+  },
+  "summary": {
+    "total_files": 90,
+    "total_directories": 29,
+    "total_size_bytes": 197573,
+    "average_file_size": 2195
+  },
+  "metadata": {
+    "generator": "vec3 file indexer",
+    "integrity_mode": "xxh64_stub",
+    "platform": "x86_64-linux-gnu"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "job_id": "⧗-25.145-fc8d6f12",
+  "op": "TEST.LOG",
+  "status": "done",
+  "pheno": "ρ{console.test}.φ{write.log}.τ{verify.receipt}",
+  "route": "local.log",
+  "started_at": "2025-12-31T15:02:35-06:00",
+  "finished_at": "2025-12-31T15:02:38-06:00",
+  "artifacts": [
+    "⧗-25.145-fc8d6f12.output"
+  ],
+  "seal": {
+    "type": "sha256",
+    "value": "06394c0246e2f52819a60bd1881aa6487fa76d51e271c1044d9d0916af9b5651"
+  }
+}

@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>3OX Job Console :: ⧗-25.145</title>
+  <style>
+    :root {
+      /* Vira Carbon High Contrast Theme */
+      --bg: #101213;
+      --surface: #161718;
+      --panel-bg: #0A0A0A;
+      --border: #252A2C;
+      --text: #D9D9D9;
+      --text-dim: #56575D;
+      --text-muted: #45454A;
+      --accent: #80CBC4;
+      --success: #a3c679;
+      --error: #c85e60;
+      --warning: #d5b05f;
+      --info: #6a90d0;
+      --lime: #a3c679;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 1rem;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .header h1 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .header .sirius {
+      color: var(--lime);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+      .grid { grid-template-columns: 1fr; gap: 0.75rem; }
+      body { padding: 0.5rem; }
+    }
+    
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .panel-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.5rem 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text);
+      font-weight: 600;
+    }
+    
+    .panel-header .controls { display: flex; gap: 0.25rem; }
+    .panel-body { padding: 1rem; flex: 1; overflow: auto; }
+    
+    .panel h2 {
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      padding-left: 0.5rem;
+      border-left: 2px solid var(--accent);
+    }
+    
+    .form-group { margin-bottom: 0.75rem; }
+    
+    label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      font-weight: 500;
+    }
+    
+    input, select, textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 0.75rem;
+      font-family: inherit;
+      font-size: 13px;
+      transition: all 0.15s;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: var(--surface);
+    }
+    
+    textarea { min-height: 80px; resize: vertical; }
+    @media (max-width: 768px) { input, select, textarea { font-size: 16px; } }
+    
+    button {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      font-family: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      font-weight: 500;
+      width: 100%;
+    }
+    
+    button:hover { 
+      background: var(--bg);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    
+    button:active { background: var(--surface); transform: translateY(1px); }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    
+    button.btn-primary {
+      background: var(--lime);
+      border-color: var(--lime);
+      color: #000000;
+      font-weight: 600;
+    }
+    button.btn-primary:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    
+    button.btn-success { border-color: var(--lime); color: var(--lime); }
+    button.btn-success:hover { background: var(--lime); color: #000000; }
+    
+    button.btn-error { border-color: var(--error); color: var(--error); }
+    button.btn-error:hover { background: var(--error); color: #000000; }
+    
+    button.btn-small { padding: 0.25rem 0.5rem; font-size: 10px; width: auto; }
+    
+    @media (min-width: 769px) { button:not(.btn-small) { width: auto; } }
+    
+    .status {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      font-size: 10px;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border: 1px solid;
+    }
+    
+    .status.queued { background: var(--bg); color: var(--warning); border-color: var(--warning); }
+    .status.running { background: var(--bg); color: var(--info); border-color: var(--info); }
+    .status.done { background: var(--bg); color: var(--success); border-color: var(--success); }
+    .status.failed { background: var(--bg); color: var(--error); border-color: var(--error); }
+    
+    .output {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      font-size: 12px;
+      line-height: 1.6;
+      max-height: 350px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    
+    .output::-webkit-scrollbar { width: 8px; }
+    .output::-webkit-scrollbar-track { background: var(--bg); }
+    .output::-webkit-scrollbar-thumb { background: var(--border); }
+    .output::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+    
+    @media (max-width: 768px) { .output { max-height: 250px; font-size: 11px; } }
+    
+    .log-entry {
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+    
+    .log-entry .ts { color: var(--text-muted); flex-shrink: 0; }
+    .log-entry .msg { flex: 1; }
+    .log-entry.info .msg { color: var(--text-dim); }
+    .log-entry.success .msg { color: var(--success); }
+    .log-entry.error .msg { color: var(--error); }
+    .log-entry::before { content: '❯'; color: var(--accent); margin-right: 0.25rem; flex-shrink: 0; }
+    
+    .pheno-builder {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .pheno-builder select {
+      margin-bottom: 0.5rem;
+      background: var(--surface);
+    }
+    
+    .pheno-slots {
+      display: grid;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    
+    .pheno-slot {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .pheno-slot label {
+      min-width: 30px;
+      color: var(--lime);
+      font-weight: 600;
+      font-size: 13px;
+      margin: 0;
+      text-transform: none;
+    }
+    
+    .pheno-slot input {
+      flex: 1;
+      background: var(--surface);
+      font-size: 12px;
+      padding: 0.35rem 0.5rem;
+    }
+    
+    .pheno-preview {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text-dim);
+      font-family: monospace;
+      word-break: break-all;
+    }
+    
+    .progress-steps {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      margin-bottom: 0.75rem;
+      font-size: 16px;
+    }
+    
+    .progress-steps .step {
+      color: var(--text-muted);
+      transition: all 0.3s;
+    }
+    
+    .progress-steps .step.active {
+      color: var(--lime);
+      text-shadow: 0 0 8px var(--lime);
+    }
+    
+    .progress-steps .step.done {
+      color: var(--accent);
+    }
+    
+    .progress-steps .arrow {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+    
+    .receipt { margin-top: 0.75rem; }
+    .receipt pre {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      overflow-x: auto;
+      font-size: 11px;
+    }
+    
+    .status-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
+      font-size: 12px;
+      border-left: 2px solid var(--accent);
+    }
+    
+    .status-box p {
+      margin: 0.35rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .status-box strong {
+      color: var(--text-dim);
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+    
+    .poll-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 11px;
+      margin-bottom: 0.75rem;
+    }
+    
+    .poll-indicator .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--lime);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    .poll-indicator.stopped .dot {
+      background: var(--error);
+      animation: none;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>▛▞ 3OX Job Console</h1>
+    <span class="sirius" id="clock">⧗--.---</span>
+  </div>
+  
+  <div class="grid">
+    <div class="panel">
+      <div class="panel-header"><span>Submit Job</span></div>
+      <div class="panel-body">
+      
+      <div class="form-group">
+        <label>Operation</label>
+        <select id="op">
+          <option value="TEST.LOG">TEST.LOG (Write test log)</option>
+          <option value="VSO.AUDIT">VSO.AUDIT</option>
+          <option value="VSO.TRANSFORM">VSO.TRANSFORM</option>
+          <option value="PHENO.VALIDATE">PHENO.VALIDATE</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Input Path</label>
+        <input type="text" id="inputPath" placeholder="/path/to/input.file">
+      </div>
+      
+      <div class="form-group">
+        <label>Pheno Chain Builder</label>
+        <div class="pheno-builder">
+          <select id="phenoTemplate">
+            <option value="">-- Select Template --</option>
+            <option value="test">TEST.LOG :: ρ{test.data}.φ{log.write}.τ{receipt}</option>
+            <option value="compiler">PHENO.COMPILER :: ρ{ingest.normalize.validate}.φ{map.resolve.contract}.τ{emit.render.publish}</option>
+            <option value="audit">VSO.AUDIT :: ρ{source.document}.φ{validate.seal}.τ{receipt.archive}</option>
+            <option value="transform">VSO.TRANSFORM :: ρ{input.parse}.φ{transform.validate}.τ{output.seal}</option>
+            <option value="custom">Custom Chain</option>
+          </select>
+          
+          <div class="pheno-slots">
+            <div class="pheno-slot">
+              <label>ρ{}</label>
+              <input type="text" id="phenoRho" placeholder="Input binding">
+            </div>
+            <div class="pheno-slot">
+              <label>φ{}</label>
+              <input type="text" id="phenoPhi" placeholder="Process binding">
+            </div>
+            <div class="pheno-slot">
+              <label>τ{}</label>
+              <input type="text" id="phenoTau" placeholder="Output binding">
+            </div>
+            <div class="pheno-slot">
+              <label>ν{}</label>
+              <input type="text" id="phenoNu" placeholder="Resilience (optional)">
+            </div>
+            <div class="pheno-slot">
+              <label>λ{}</label>
+              <input type="text" id="phenoLambda" placeholder="Governance (optional)">
+            </div>
+          </div>
+          
+          <div class="pheno-preview" id="phenoPreview">ρ{}.φ{}.τ{}</div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Route</label>
+        <select id="route">
+          <option value="0ut.3ox">0ut.3ox</option>
+          <option value="local.log">local.log</option>
+          <option value="queue">queue</option>
+        </select>
+      </div>
+      
+      <button id="submitBtn" class="btn-primary">Submit Job</button>
+      <button id="testBtn" class="btn-success" style="margin-top: 0.5rem;">Run Quick Test</button>
+      </div>
+    </div>
+    
+    <div class="panel">
+      <div class="panel-header">
+        <span>Job Status & Monitoring</span>
+        <div class="controls">
+          <button id="startPollBtn" class="btn-small btn-success">Start</button>
+          <button id="stopPollBtn" class="btn-small btn-error">Stop</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="progress-steps" id="progressSteps">
+          <span class="step" id="step-bind">⊢</span>
+          <span class="arrow">→</span>
+          <span class="step" id="step-direct">⇨</span>
+          <span class="arrow">→</span>
+          <span class="step" id="step-carry">⟿</span>
+          <span class="arrow">→</span>
+          <span class="step" id="step-project">▷</span>
+        </div>
+        
+        <div class="poll-indicator" id="pollStatus">
+          <span class="dot" id="pollIndicator"></span>
+          <span id="pollStatusText">Polling active</span>
+        </div>
+        
+        <div id="jobInfo" class="status-box">
+          <p style="color: var(--text-dim);">No active job</p>
+        </div>
+        
+        <h2>File Watcher</h2>
+        <div class="output" id="fileWatch" style="max-height: 120px; margin-bottom: 0.75rem;">
+          <div class="log-entry info">
+            <span class="ts">[⧗-25.145]</span>
+            <span class="msg">Watching .3ox/vec3/var/queue/ and receipts/</span>
+          </div>
+        </div>
+        
+        <h2>Logs</h2>
+        <div class="output" id="logs">
+          <div class="log-entry info">
+            <span class="ts">[⧗-25.145]</span>
+            <span class="msg">Console ready. Submit a job to begin.</span>
+          </div>
+        </div>
+        
+        <div class="receipt" id="receiptSection" style="display: none; margin-top: 0.75rem;">
+          <h2>Receipt</h2>
+          <pre id="receiptContent"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const API_BASE = 'http://127.0.0.1:7777';
+    
+    // Elements
+    const clockEl = document.getElementById('clock');
+    const logsEl = document.getElementById('logs');
+    const fileWatchEl = document.getElementById('fileWatch');
+    const jobInfoEl = document.getElementById('jobInfo');
+    const receiptSection = document.getElementById('receiptSection');
+    const receiptContent = document.getElementById('receiptContent');
+    const submitBtn = document.getElementById('submitBtn');
+    const testBtn = document.getElementById('testBtn');
+    const pollStatusEl = document.getElementById('pollStatus');
+    const pollIndicator = document.getElementById('pollIndicator');
+    const pollStatusText = document.getElementById('pollStatusText');
+    
+    // Pheno builder elements
+    const phenoTemplate = document.getElementById('phenoTemplate');
+    const phenoRho = document.getElementById('phenoRho');
+    const phenoPhi = document.getElementById('phenoPhi');
+    const phenoTau = document.getElementById('phenoTau');
+    const phenoNu = document.getElementById('phenoNu');
+    const phenoLambda = document.getElementById('phenoLambda');
+    const phenoPreview = document.getElementById('phenoPreview');
+    
+    // Progress step elements
+    const stepBind = document.getElementById('step-bind');
+    const stepDirect = document.getElementById('step-direct');
+    const stepCarry = document.getElementById('step-carry');
+    const stepProject = document.getElementById('step-project');
+    
+    // State
+    let currentJobId = null;
+    let pollInterval = null;
+    let pollingEnabled = true;
+    let lastQueueCheck = 0;
+    let lastReceiptCheck = 0;
+    let errorCount = 0;
+    const MAX_ERRORS = 3;
+    
+    // Update Sirius clock
+    function updateClock() {
+      const now = new Date();
+      const reset = new Date('2025-08-08');
+      const days = Math.floor((now - reset) / 86400000);
+      const year = now.getFullYear() % 100;
+      clockEl.textContent = `⧗-${year}.${String(days).padStart(3, '0')}`;
+    }
+    updateClock();
+    setInterval(updateClock, 60000);
+    
+    // Pheno templates
+    const phenoTemplates = {
+      test: { rho: 'test.data', phi: 'log.write', tau: 'receipt' },
+      compiler: { rho: 'ingest.normalize.validate', phi: 'map.resolve.contract', tau: 'emit.render.publish' },
+      audit: { rho: 'source.document', phi: 'validate.seal', tau: 'receipt.archive' },
+      transform: { rho: 'input.parse', phi: 'transform.validate', tau: 'output.seal' }
+    };
+    
+    // Update pheno preview
+    function updatePhenoPreview() {
+      const parts = [];
+      if (phenoRho.value) parts.push(`ρ{${phenoRho.value}}`);
+      if (phenoPhi.value) parts.push(`φ{${phenoPhi.value}}`);
+      if (phenoTau.value) parts.push(`τ{${phenoTau.value}}`);
+      if (phenoNu.value) parts.push(`ν{${phenoNu.value}}`);
+      if (phenoLambda.value) parts.push(`λ{${phenoLambda.value}}`);
+      phenoPreview.textContent = parts.join('.') || 'ρ{}.φ{}.τ{}';
+    }
+    
+    // Pheno template selector
+    phenoTemplate.addEventListener('change', (e) => {
+      const template = phenoTemplates[e.target.value];
+      if (template) {
+        phenoRho.value = template.rho || '';
+        phenoPhi.value = template.phi || '';
+        phenoTau.value = template.tau || '';
+        phenoNu.value = '';
+        phenoLambda.value = '';
+      } else {
+        phenoRho.value = '';
+        phenoPhi.value = '';
+        phenoTau.value = '';
+        phenoNu.value = '';
+        phenoLambda.value = '';
+      }
+      updatePhenoPreview();
+    });
+    
+    // Update preview on input
+    [phenoRho, phenoPhi, phenoTau, phenoNu, phenoLambda].forEach(el => {
+      el.addEventListener('input', updatePhenoPreview);
+    });
+    
+    // Initialize with test template
+    phenoTemplate.value = 'test';
+    phenoTemplate.dispatchEvent(new Event('change'));
+    
+    // Progress step animation
+    function setProgressStep(step) {
+      [stepBind, stepDirect, stepCarry, stepProject].forEach(el => {
+        el.classList.remove('active', 'done');
+      });
+      
+      if (step === 'bind') {
+        stepBind.classList.add('active');
+      } else if (step === 'direct') {
+        stepBind.classList.add('done');
+        stepDirect.classList.add('active');
+      } else if (step === 'carry') {
+        stepBind.classList.add('done');
+        stepDirect.classList.add('done');
+        stepCarry.classList.add('active');
+      } else if (step === 'project') {
+        stepBind.classList.add('done');
+        stepDirect.classList.add('done');
+        stepCarry.classList.add('done');
+        stepProject.classList.add('active');
+      } else if (step === 'done') {
+        [stepBind, stepDirect, stepCarry, stepProject].forEach(el => el.classList.add('done'));
+      }
+    }
+    
+    // Logging
+    function log(msg, level = 'info') {
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${level}`;
+      entry.innerHTML = `<span class="ts">[${clockEl.textContent}]</span> <span class="msg">${msg}</span>`;
+      logsEl.appendChild(entry);
+      logsEl.scrollTop = logsEl.scrollHeight;
+    }
+    
+    // File watch logging
+    function fileLog(msg, level = 'info') {
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${level}`;
+      entry.innerHTML = `<span class="ts">[${clockEl.textContent}]</span> <span class="msg">${msg}</span>`;
+      fileWatchEl.appendChild(entry);
+      fileWatchEl.scrollTop = fileWatchEl.scrollHeight;
+      while (fileWatchEl.children.length > 10) fileWatchEl.removeChild(fileWatchEl.firstChild);
+    }
+    
+    // File watcher
+    async function watchFiles() {
+      try {
+        const queueRes = await fetch(`${API_BASE}/v1/files/queue`);
+        if (queueRes.ok) {
+          const queue = await queueRes.json();
+          if (queue.modified > lastQueueCheck) {
+            fileLog(`Queue updated: ${queue.files.length} files`, 'success');
+            lastQueueCheck = queue.modified;
+          }
+        }
+        
+        const receiptRes = await fetch(`${API_BASE}/v1/files/receipts`);
+        if (receiptRes.ok) {
+          const receipts = await receiptRes.json();
+          if (receipts.modified > lastReceiptCheck) {
+            fileLog(`Receipt written: ${receipts.latest}`, 'success');
+            lastReceiptCheck = receipts.modified;
+          }
+        }
+      } catch (e) {}
+    }
+    
+    const pollHandle = setInterval(() => {
+      if (pollingEnabled) watchFiles();
+    }, 1000);
+    
+    // Update poll status indicator
+    function updatePollStatus(active) {
+      if (active) {
+        pollStatusEl.classList.remove('stopped');
+        pollStatusText.textContent = 'Polling active';
+      } else {
+        pollStatusEl.classList.add('stopped');
+        pollStatusText.textContent = 'Polling stopped';
+      }
+    }
+    
+    // Start/Stop buttons
+    document.getElementById('startPollBtn').addEventListener('click', () => {
+      pollingEnabled = true;
+      errorCount = 0;
+      updatePollStatus(true);
+      fileLog('Polling started', 'info');
+      log('All polling resumed', 'info');
+      if (currentJobId && !pollInterval) pollInterval = setInterval(pollJobStatus, 800);
+    });
+    
+    document.getElementById('stopPollBtn').addEventListener('click', () => {
+      pollingEnabled = false;
+      if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
+      updatePollStatus(false);
+      fileLog('Polling stopped', 'error');
+      log('All polling stopped. Click Start to resume.', 'error');
+    });
+    
+    // Quick test button
+    testBtn.addEventListener('click', async () => {
+      const now = new Date();
+      const jobId = `test-${now.getTime()}`;
+      testBtn.disabled = true;
+      setProgressStep('bind');
+      log('⊢ Binding test operation...', 'info');
+      
+      const phenoOp = {
+        job_id: jobId,
+        op: 'TEST.LOG',
+        pheno: 'ρ{console.test}.φ{write.log}.τ{verify.receipt}',
+        route: 'local.log',
+        submitted_at: clockEl.textContent,
+        source: 'console_ui'
+      };
+      
+      try {
+        setProgressStep('direct');
+        log(`⇨ Directing test flow...`);
+        
+        const res = await fetch(`${API_BASE}/v1/jobs`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(phenoOp)
+        });
+        
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        setProgressStep('carry');
+        log(`⟿ Carrying motion...`);
+        
+        const job = await res.json();
+        currentJobId = job.job_id;
+        
+        setProgressStep('project');
+        log(`▷ Test job queued: ${job.job_id}`, 'success');
+        fileLog(`Created: queue/${job.job_id}.job.json`, 'success');
+        updateJobInfo(job);
+        
+        if (pollingEnabled && !pollInterval) pollInterval = setInterval(pollJobStatus, 800);
+        
+        setTimeout(() => setProgressStep('done'), 1000);
+      } catch (e) {
+        log(`Test failed: ${e.message}`, 'error');
+        log('Note: REST API may not be running. Check vec3 status.', 'info');
+        testBtn.disabled = false;
+        setProgressStep('');
+      }
+    });
+    
+    // Submit job
+    submitBtn.addEventListener('click', async () => {
+      const op = document.getElementById('op').value;
+      const inputPath = document.getElementById('inputPath').value;
+      const route = document.getElementById('route').value;
+      
+      // Build pheno from slots
+      const phenoChain = phenoPreview.textContent;
+      
+      submitBtn.disabled = true;
+      setProgressStep('bind');
+      log(`⊢ Binding input: ${op}...`);
+      
+      const phenoMatch = phenoChain.match(/ρ\{([^}]+)\}\.φ\{([^}]+)\}\.τ\{([^}]+)\}/);
+      if (!phenoMatch) {
+        log('Invalid pheno chain. Must have at minimum: ρ{}.φ{}.τ{}', 'error');
+        submitBtn.disabled = false;
+        setProgressStep('');
+        return;
+      }
+      
+      try {
+        setProgressStep('direct');
+        log(`⇨ Directing flow...`);
+        
+        const res = await fetch(`${API_BASE}/v1/jobs`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            op,
+            inputs: inputPath ? [{ path: inputPath }] : [],
+            pheno: { rho: phenoMatch[1], phi: phenoMatch[2], tau: phenoMatch[3] },
+            route
+          })
+        });
+        
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        setProgressStep('carry');
+        log(`⟿ Carrying motion...`);
+        
+        const job = await res.json();
+        currentJobId = job.job_id;
+        
+        setProgressStep('project');
+        log(`▷ Projecting output: ${job.job_id}`, 'success');
+        fileLog(`Created: queue/${job.job_id}.job.json`, 'success');
+        updateJobInfo(job);
+        
+        if (pollingEnabled && !pollInterval) pollInterval = setInterval(pollJobStatus, 800);
+        
+        setTimeout(() => setProgressStep('done'), 1000);
+      } catch (e) {
+        log(`Submit failed: ${e.message}`, 'error');
+        submitBtn.disabled = false;
+        setProgressStep('');
+      }
+    });
+    
+    // Poll job status
+    async function pollJobStatus() {
+      if (!currentJobId || !pollingEnabled) return;
+      try {
+        const encodedJobId = encodeURIComponent(currentJobId);
+        const res = await fetch(`${API_BASE}/v1/jobs/${encodedJobId}`);
+        if (!res.ok) {
+          errorCount++;
+          if (errorCount >= MAX_ERRORS) {
+            pollingEnabled = false;
+            clearInterval(pollInterval);
+            pollInterval = null;
+            updatePollStatus(false);
+            log(`Polling auto-stopped after ${MAX_ERRORS} errors. Click Start to resume.`, 'error');
+            return;
+          }
+          throw new Error(`HTTP ${res.status}`);
+        }
+        errorCount = 0;
+        const status = await res.json();
+        updateJobInfo(status);
+        if (status.status === 'done' || status.status === 'failed') {
+          clearInterval(pollInterval);
+          pollInterval = null;
+          submitBtn.disabled = false;
+          testBtn.disabled = false;
+          errorCount = 0;
+          log(`Job ${status.status}: ${currentJobId}`, status.status === 'done' ? 'success' : 'error');
+          fileLog(`Receipt: receipts/${currentJobId}.receipt.json`, 'success');
+          fetchReceipt(currentJobId);
+        }
+      } catch (e) {
+        if (errorCount < MAX_ERRORS) log(`Status poll failed: ${e.message}`, 'error');
+      }
+    }
+    
+    // Update job info
+    function updateJobInfo(job) {
+      jobInfoEl.innerHTML = `
+        <p><strong>Job ID:</strong> ${job.job_id}</p>
+        <p><strong>Status:</strong> <span class="status ${job.status}">${job.status}</span></p>
+        ${job.progress !== undefined ? `<p><strong>Progress:</strong> ${Math.round(job.progress * 100)}%</p>` : ''}
+        ${job.stage ? `<p><strong>Stage:</strong> ${job.stage}</p>` : ''}
+      `;
+      jobInfoEl.className = 'status-box';
+    }
+    
+    // Fetch receipt
+    async function fetchReceipt(jobId) {
+      try {
+        const encodedJobId = encodeURIComponent(jobId);
+        const res = await fetch(`${API_BASE}/v1/jobs/${encodedJobId}/receipt`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const receipt = await res.json();
+        receiptContent.textContent = JSON.stringify(receipt, null, 2);
+        receiptSection.style.display = 'block';
+      } catch (e) {
+        log(`Receipt fetch failed: ${e.message}`, 'error');
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "job_id": "⧗-25.145-45703f21",
+  "op": "TEST.LOG",
+  "inputs": [
+
+  ],
+  "pheno": "ρ{console.test}.φ{write.log}.τ{verify.receipt}",
+  "route": "local.log",
+  "submitted_at": "⧗-25.145",
+  "source": "rest_api"
+}

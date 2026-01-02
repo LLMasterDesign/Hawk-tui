@@ -1,0 +1,140 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Claim.Ledger Schema",
+  "description": "Formal claim ledger for tracking assertions and their verification status",
+  "type": "object",
+  "required": [
+    "ledger_id",
+    "claims",
+    "extraction_metadata",
+    "ledger_timestamp"
+  ],
+  "properties": {
+    "ledger_id": {
+      "type": "string",
+      "description": "Unique ledger identifier",
+      "pattern": "^ledger_[a-f0-9]{16}$"
+    },
+    "claims": {
+      "type": "array",
+      "description": "Array of claims extracted from operation",
+      "items": {
+        "type": "object",
+        "required": ["claim_id", "claim_text", "confidence", "status"],
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "description": "Unique claim identifier",
+            "pattern": "^claim_[a-f0-9]{16}$"
+          },
+          "claim_text": {
+            "type": "string",
+            "description": "The actual claim text"
+          },
+          "claim_type": {
+            "type": "string",
+            "enum": ["factual", "opinion", "prediction", "instruction", "analysis"],
+            "description": "Type of claim"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Confidence score for claim validity"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["verified", "unverified", "unknown", "disputed", "withdrawn"],
+            "description": "Current verification status"
+          },
+          "evidence_index_id": {
+            "type": "string",
+            "description": "Reference to evidence index",
+            "pattern": "^evidence_[a-f0-9]{16}$"
+          },
+          "verification_method": {
+            "type": "string",
+            "enum": ["automated", "human_review", "expert_validation", "unverified"],
+            "description": "How the claim was verified"
+          },
+          "extraction_context": {
+            "type": "object",
+            "description": "Context where claim was extracted",
+            "properties": {
+              "source": {"type": "string"},
+              "position": {"type": "integer"},
+              "surrounding_text": {"type": "string"}
+            }
+          },
+          "tags": {
+            "type": "array",
+            "description": "Classification tags",
+            "items": {"type": "string"}
+          }
+        }
+      }
+    },
+    "extraction_metadata": {
+      "type": "object",
+      "description": "Metadata about claim extraction process",
+      "required": ["extractor_version", "total_claims", "extraction_timestamp"],
+      "properties": {
+        "extractor_version": {
+          "type": "string",
+          "description": "Version of claim extraction system"
+        },
+        "total_claims": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of claims extracted"
+        },
+        "extraction_timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When extraction occurred"
+        },
+        "confidence_threshold": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Minimum confidence threshold used"
+        },
+        "processing_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Time taken for extraction"
+        }
+      }
+    },
+    "ledger_timestamp": {
+      "type": "string",
+      "description": "ISO 8601 timestamp of ledger creation",
+      "format": "date-time"
+    },
+    "verification_summary": {
+      "type": "object",
+      "description": "Summary of verification results",
+      "properties": {
+        "verified_count": {"type": "integer", "minimum": 0},
+        "unverified_count": {"type": "integer", "minimum": 0},
+        "unknown_count": {"type": "integer", "minimum": 0},
+        "disputed_count": {"type": "integer", "minimum": 0},
+        "withdrawn_count": {"type": "integer", "minimum": 0},
+        "average_confidence": {"type": "number", "minimum": 0.0, "maximum": 1.0}
+      }
+    },
+    "audit_trail": {
+      "type": "array",
+      "description": "Audit trail of ledger modifications",
+      "items": {
+        "type": "object",
+        "properties": {
+          "timestamp": {"type": "string", "format": "date-time"},
+          "action": {"type": "string"},
+          "actor": {"type": "string"},
+          "changes": {"type": "object"}
+        }
+      }
+    }
+  }
+}

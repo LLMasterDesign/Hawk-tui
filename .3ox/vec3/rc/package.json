@@ -1,0 +1,22 @@
+{
+  "name": "3ox-pheno-framework",
+  "version": "1.0.0",
+  "description": "PHENO Framework - LAW + ORDER + RECEIPT microkernel OS",
+  "main": "boot/start.sh",
+  "scripts": {
+    "install": "./boot/install.sh",
+    "start": "./boot/start.sh",
+    "test": "ruby lib/runners/run.rb test",
+    "validate": "ruby lib/runners/run.rb validate",
+    "integrity": "./boot/compute_integrity.sh",
+    "index": "./boot/generate_file_index.sh"
+  },
+  "keywords": ["pheno", "framework", "microkernel", "ai", "governance"],
+  "author": "PHENO Framework",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

@@ -1,0 +1,96 @@
+# INFER.TOML :: LLM Provider Configuration for CMD.BRIDGE
+# This file configures AI model providers and their settings
+
+[provider]
+# Default provider to use (openai, claude, ollama)
+default_provider = "openai"
+
+# Provider priority order (tried in sequence on failure)
+priority = ["openai", "claude", "ollama"]
+
+[openai]
+# OpenAI API configuration
+model = "gpt-4o"
+api_base = "https://api.openai.com/v1"
+timeout_seconds = 30
+retry_attempts = 3
+retry_delay_seconds = 1
+
+# Model parameters
+max_tokens = 4096
+temperature = 0.7
+top_p = 1.0
+frequency_penalty = 0.0
+presence_penalty = 0.0
+
+# Streaming configuration
+streaming = true
+stream_timeout_seconds = 60
+
+[claude]
+# Anthropic Claude configuration
+model = "claude-3-5-sonnet-20241022"
+api_base = "https://api.anthropic.com"
+timeout_seconds = 30
+retry_attempts = 3
+retry_delay_seconds = 1
+
+# Model parameters
+max_tokens = 4096
+temperature = 0.7
+top_p = 1.0
+top_k = 250
+
+# Streaming configuration
+streaming = true
+stream_timeout_seconds = 60
+
+[ollama]
+# Local Ollama configuration
+model = "llama2"
+host = "http://localhost:11434"
+timeout_seconds = 60
+retry_attempts = 2
+retry_delay_seconds = 2
+
+# Model parameters (passed through to Ollama)
+temperature = 0.7
+top_p = 0.9
+top_k = 40
+num_predict = 4096
+
+# Streaming configuration
+streaming = true
+stream_timeout_seconds = 120
+
+[behavior]
+# General AI behavior settings
+system_prompt_default = "You are a helpful AI assistant operating within the CMD.BRIDGE framework. Provide clear, accurate, and actionable responses."
+
+# Response formatting
+max_response_length = 8000
+truncate_long_responses = true
+
+# Error handling
+fallback_on_error = true
+error_retry_count = 2
+
+[logging]
+# AI interaction logging
+log_prompts = true
+log_responses = true
+log_timings = true
+
+# Privacy settings
+mask_api_keys_in_logs = true
+mask_personal_data = true
+
+[cache]
+# Response caching (experimental)
+enable_cache = false
+cache_ttl_seconds = 3600
+cache_max_size = 1000
+
+# Cache key generation
+cache_include_system_prompt = true
+cache_include_temperature = true

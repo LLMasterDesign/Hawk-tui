@@ -1,0 +1,45 @@
+{
+  "manifest_version": "1.0.0",
+  "core_version": "25.125",
+  "description": "PHENO Framework Boot Manifest - LAW + ORDER + RECEIPT integrity anchor",
+  "integrity": {
+    "core_law_xxh64": "pending_hash_computation",
+    "channels_xxh64": "pending_hash_computation",
+    "order_xxh64": "pending_hash_computation",
+    "responder_authority_xxh64": "pending_hash_computation",
+    "receipt_schema_xxh64": "pending_hash_computation",
+    "prism_kernel_xxh64": "pending_hash_computation",
+    "tools_yml_xxh64": "pending_hash_computation",
+    "routes_json_xxh64": "pending_hash_computation",
+    "limits_toml_xxh64": "pending_hash_computation",
+    "run_rb_xxh64": "pending_hash_computation",
+    "default_cfg_xxh64": "pending_hash_computation",
+    "raven_cfg_xxh64": "pending_hash_computation",
+    "noctua_cfg_xxh64": "pending_hash_computation"
+  },
+  "workdesk": {
+    "host_path": "../../!WORKDESK",
+    "mount_mode": "mirror_bridge",
+    "sync_ledger": "var/state/wrkdsk.index.json"
+  },
+  "runtime": {
+    "mode": "active_on_run",
+    "queue_persistence": "var/queue",
+    "receipt_storage": "var/receipts",
+    "log_directory": "var/logs",
+    "state_directory": "var/state",
+    "health_monitoring": true
+  },
+  "validation_rules": {
+    "require_manifest_integrity": true,
+    "allow_degraded_mode": false,
+    "log_integrity_failures": true,
+    "auto_update_manifest": false
+  },
+  "provenance": {
+    "created_at": "2025-12-31T15:30:00Z",
+    "created_by": "PHENO Framework Builder",
+    "architecture": "microkernel_os",
+    "law_principle": "purpose_within_structure"
+  }
+}

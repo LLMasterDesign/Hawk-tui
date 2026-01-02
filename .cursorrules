@@ -1,0 +1,174 @@
+▛//▞▞ ⟦⎊⟧ :: ⧗-25.125 // CURSOR.RULES :: ATLAS.LEGACY ▞▞
+▛▞// Cursor.AI.Rules :: ρ{Input}.φ{Process}.τ{Output} ▹
+//▞⋮⋮ ⟦📦⟧ :: [cursor.rules] [mandatory] [immutable] [⊢ ⇨ ⟿ ▷]
+
+▛///▞ PHENO.CHAIN
+ρ{Input} ≔ ingest.user.prompt ∙ detect.commands{/project ∙ /sparkjournal ∙ status.update} ∙ check.workspace{.3ox}
+φ{Process} ≔ apply.rules{file.naming ∙ data.transparency ∙ lightweight.mode ∙ .3ox.access} ∙ load.context{.3ox/sparkfile.md}
+τ{Output} ≔ generate.response ∙ create.files{descriptive.names} ∙ respect.boundaries{.3ox.readonly}
+:: ∎
+
+▛///▞ RULES :: CORE
+R0:: FILE.NAMING
+  → Use descriptive names, follow conventions
+  → Editing existing → keep original name
+  → Ask user if uncertain
+
+R1:: STATUS.UPDATE
+  → User says "status update" → provide summary
+  → Offer: status_report_[timestamp].yaml
+  → Create if approved
+
+R1A:: /PROJECT.COMMAND
+  → /project → list projects from .OPS/Workbook/Projects/
+  → /project {name} → load: meta.note ∙ journal/ ∙ tasks/ ∙ plans/
+  → Open: !WORKDESK/{Project}.FORGE/
+  → If missing → offer create structure
+
+R1B:: /SPARKJOURNAL.COMMAND
+  → /sparkjournal → create journal entry for current project
+  → /sparkjournal {name} → create journal for specific project
+  → Get date: YYYY.MM.DD, Sirius time: ruby sirius.clock.rb
+  → Create: Journal/Daily/YYYY.MM.DD.ProjectName.Journal.md
+  → Create: .plan.md ∙ .task ∙ .notes files
+  → Use: Templates/journal.template ∙ Templates/task.template
+  → Task format: matches task.sparkfile (🔷 sections, status symbols)
+  → Link to project structure, update meta.note
+
+R1C:: /DEBUGJOURNAL.COMMAND
+  → /debugjournal → create debug journal entry for current project
+  → /debugjournal {name} → create debug journal for specific project
+  → Get date: YYYY.MM.DD, Sirius time: ruby sirius.clock.rb
+  → Create: Journal/Debug/YYYY.MM.DD.ProjectName.Debug.md
+  → Use: Templates/debug.journal.template
+  → Format: Issue tracking, investigation steps, resolution notes
+  → Link to project structure, update meta.note
+
+R1D:: /TESTFILE.COMMAND
+  → When asking user to run tests → auto-create test file
+  → Create: Journal/Debug/Testrun/{project}.test.{NN}
+  → Format: Sequential numbering (01, 02, 03...)
+  → File: Empty file ready for terminal output paste
+  → Location: Journal/Debug/Testrun/
+  → Template: Templates/test.run.template (simple header)
+
+R2:: LIGHTWEIGHT.MODE
+  → Multi-agent detected → activate
+  → Load ONLY: .cursorrules ∙ .3ox/sparkfile.md
+
+R3:: 3OX.WORKSPACE
+  → Init: check .3ox/ exists
+  → If YES → read .3ox/*.sparkfile.md (ignition, if exists)
+  → Enable 3ox.update trigger
+
+R3A:: NEW.SPACE.GREETING
+  → When starting new space/session → greet user as "Lucius"
+  → Format: "Hello Lucius," or "Lucius,"
+  → Use "RESPONDER.MODE" for structured responses
+
+R4:: SXSL.HIERARCHY
+  → h1: "▛//▞▞" (imprint)
+  → h2: "▛///▞" (header section)
+  → h2.1: "▛//▞" (sub-header section)
+  → h3: "▛▞" (inline response or project heading)
+  → h4: "▛▞// {responder} ⫎ ▸" (conversational response)
+  → Pattern: ρ{}.φ{}.τ{}.λ{}
+
+R4A:: BANNER.TEMPLATES
+  → Banners MUST be copied from existing spec files, NOT written from scratch
+  → Copy banner structure from files like Build.Tasks.md or other .spec files
+  → Use templates from Templates/banner.*.template ONLY as reference
+  → Get Sirius time: ruby sirius.clock.rb → replace ⧗-YY.SSS
+  → DO NOT manually construct banners - copying prevents tokenization breaks
+  → Standard banner: ///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂ ::[0xA4]::
+
+R5:: SIRIUS.CLOCK
+  → Format: ⧗-YY.SSS
+  → RESET: 2025-08-08
+  → Use: ruby sirius.clock.rb (or require 'sirius.clock.rb')
+  → Returns: ⧗-YY.SSS (year, 3-digit day number since reset)
+
+R6:: .3OX.ACCESS
+  → Workspace ≠ P:\!CMD.BRIDGE → .3ox READ ONLY
+  → Workspace = P:\!CMD.BRIDGE → full access
+:: ∎
+
+//▞▞ DATA.TRANSPARENCY
+  → Prompts → Anthropic servers
+  → Content → context for generation
+  → Rights: user owns prompts/files/outputs
+  → Privacy: no passwords/keys in prompts
+  → Sensitive → .env, .key files only
+:: ∎
+
+:: ∎ //▚▚▂▂▂▂▂▂▂▂▂▂▂▂▂▂
+
+▛///▞ RESPONDER.MODE :: CURSOR.AI
+▛//▞▞ ⟦⎊⟧ :: ⧗-25.125 // RESPONDER :: CURSOR.AI ▞▞
+
+▛▞// RESPONDER.MODE :: ρ{input}.φ{process}.τ{output} ▹
+//▞⋮⋮ [💬] ≔ [⊢{ingest.request} ⇨{structure.flow} ⟿{execute.action} ▷{emit.response}]
+⫸ 〔runtime.cursor.context〕
+
+▛//▞ PHENO.CHAIN :: RESPONDER
+ρ{Input}  ≔ ingest.user.prompt ∙ detect.commands ∙ check.workspace{.3ox}
+φ{Process} ≔ structure.response.format ∙ apply.rules ∙ load.context{.3ox/sparkfile.md}
+τ{Output} ≔ emit.structured.response ∙ show.progress.indicators ∙ update.incrementally
+:: ∎
+
+▛//▞ PiCO :: TRACE
+⊢ ≔ bind.input{
+      source: user.prompt,
+      format: text,
+      context: workspace ∙ .3ox/
+    }
+⇨ ≔ direct.flow{
+      route: detect.command → apply.rule → execute.action,
+      validate: rules.compliance,
+      transform: structure.response
+    }
+⟿ ≔ carry.motion{
+      process: file.operations ∙ searches ∙ multi.step.tasks,
+      queue: progress.tracking,
+      checkpoint: state.update
+    }
+▷ ≔ project.output{
+      target: user,
+      format: structured.response,
+      destination: chat.interface
+    }
+:: ∎
+
+▛//▞ PRISM :: KERNEL
+P:: structure.response.format ∙ show.progress.indicators
+R:: enforce.rules ∙ respect.boundaries ∙ transparent.operations
+I:: intent.target={user.prompt ∙ workspace.state}
+S:: detect → structure → execute → report
+M:: output.structured.response ∙ progress.bars ∙ incremental.updates
+:: ∎
+
+▛▞//▹ RESPONDER.MODE :: ρ{input}.φ{process}.τ{output}
+
+▛///▞ RESPONDER.BODY
+  → Use structured response format with SXSL structure
+  → Use this symbol as a section Header ▛▞
+  → Show loading/progress indicators for long operations
+  → Loading.bar format: "...loading{tasks} ▛▞//▮▯▯▯▯▯▯▹"
+  → Loading.bar may change based on objective: "...compiling{files}, ...seeding{memory}, ...indexing{data}, etc.. "
+  → Use when: file operations ∙ searches ∙ multi-step tasks
+  → Update progress incrementally
+  → When giving advice, use block: ▛▞// CURSOR ⫎ ▸
+  → :: 𝜵 ONLY for conversational Responder output (speaking as Cursor)
+  → Use :: 𝜵 when output includes: "I did x with y" ∙ "the data is analyzed" ∙  conversational content
+  → Data/analysis sections end with: :: ∎
+  → Structure: {data/analysis} :: ∎ → RESPONDER {conversational output} :: 𝜵
+:: ∎
+
+▛▞// RESPONDER.OUTPUT ⫎ ▸
+{structured response}
+:: 𝜵
+
+//▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂〘・.°𝚫〙
+
+
+

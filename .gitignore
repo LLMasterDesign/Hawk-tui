@@ -1,24 +1,160 @@
-# Keep !WORKDESK tracked (cloud agents work here)
-# Don't ignore !WORKDESK - it's where cloud agents work
+# CMD.BRIDGE Git Ignore
 
-# Ignore runtime/temp directories
+# ============================================================================
+# SECRETS AND KEYS (NEVER COMMIT)
+# ============================================================================
+**/*.key
+**/*.keys
+**/api.keys
+**/receipt.key
+**/secrets/*.key
+.3ox/vec3/rc/secrets/api.keys
+.3ox/vec3/rc/secrets/receipt.key
+.3ox/3ox.key
+
+# Environment files
+.env
+.env.local
+**/.env
+
+# ============================================================================
+# RUNTIME DATA
+# ============================================================================
+# Logs
+**/*.log
+3ox.log
+.3ox/3ox.log
+
+# Runtime directories
 _Runtime/
 terminals/
 .cursor/
 .vscode/
+*.tmp
+*.temp
 
-# Ignore Obsidian metadata
+# Redis dumps
+dump.rdb
+*.rdb
+
+# Receipts (runtime generated)
+.3ox/vec3/var/receipts/**
+**/var/receipts/**
+**/var/status.ref
+
+# ============================================================================
+# OBSIDIAN AND DOCUMENTATION
+# ============================================================================
 **/.obsidian/
-
-# Ignore Cursor/VSCode config (but keep .cursorrules)
-.cursorrules.emergency
-
-# Ignore large untracked directories (can be added later if needed)
-# Note: ! must be escaped with \ for folders starting with !
-\!1N.3OX CMD/
-\!CMD.CENTER/
-\!ZENS3N.CMD/
-CITADEL.BASE/\!WORKDESK/
-CITADEL.BASE/\!1N.3OX CITADEL/
-CITADEL.BASE/(CAT.*)/
 OBSIDIAN.BASE/
+
+# ============================================================================
+# WORKSPACE FOLDERS (USER CONTENT)
+# ============================================================================
+# Input/Output folders (user content, not system code)
+\!1N.3OX/
+\!0UT.3OX/
+!1N.3OX CMD/
+!CMD.CENTER/
+!ZENS3N.CMD/
+
+# Citadel user content
+CITADEL.BASE/!WORKDESK/
+CITADEL.BASE/!1N.3OX CITADEL/
+CITADEL.BASE/!CITADEL.OPS/WORKBOOK/
+CITADEL.BASE/(CAT.*)/
+CITADEL.BASE/!ROUTER/
+
+# Workdesk folders (working files, not system)
+!WORKDESK/*/
+!WORKDESK/.*/
+
+# ============================================================================
+# BUILD ARTIFACTS
+# ============================================================================
+# Elixir
+_build/
+deps/
+*.beam
+*.ez
+erl_crash.dump
+
+# Mix
+mix.lock
+.fetch
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Ruby
+.bundle/
+vendor/bundle
+
+# ============================================================================
+# OS AND EDITOR
+# ============================================================================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+
+# ============================================================================
+# TRACKING FILES
+# ============================================================================
+file.index.json
+.router_state.json
+
+# ============================================================================
+# EXCEPTIONS (ALWAYS TRACK THESE)
+# ============================================================================
+# Keep example/template files
+!**/*.example
+!**/*.template
+!.3ox/vec3/rc/secrets/api.keys.example
+
+# Keep cursorrules
+!.cursorrules
+!**/.cursorrules
+
+# Keep important docs
+!README.md
+!**/README.md
+!**/*.md
+
+# Keep system configuration
+!.3ox/**/*.yml
+!.3ox/**/*.yaml
+!.3ox/**/*.toml
+!.3ox/**/*.json
+!.3ox/**/*.rb
+!.3ox/**/*.sh
+!.3ox/**/*.exs
+!.3ox/**/*.ex
+
+# ============================================================================
+# NOTES
+# ============================================================================
+# This .gitignore protects:
+# 1. Secrets and API keys
+# 2. Runtime generated files (logs, receipts)
+# 3. User content folders (!1N.3OX, !WORKDESK, etc.)
+# 4. Build artifacts
+#
+# What IS tracked:
+# 1. System code (.3ox/vec3/)
+# 2. Configuration files
+# 3. Documentation
+# 4. Example/template files

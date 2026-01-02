@@ -1,0 +1,166 @@
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂///
+///▛//▞▞ ⟦⎊⟧ :: ⧗-25.125 // REDIS.INTEGRATION :: State Persistence ▞▞
+
+▛▞// REDIS.INTEGRATION :: ρ{Connection}.φ{Persistence}.τ{Management} ▹
+⫸ 〔redis.state.persistence〕
+
+# REDIS INTEGRATION: State Persistence Layer
+
+## ρ{Connection} :: Redis Connection Management
+
+Connection.Requirements::
+  - Redis must be running for state persistence
+  - No memory loss between system states
+  - Automatic startup if Redis not available
+  - Connection pooling for high availability
+
+Connection.Bootstrap::
+  ```bash
+  # Check Redis status
+  redis-cli ping || redis-server --daemonize yes
+
+  # Verify persistence
+  redis-cli config get save
+  ```
+
+Connection.Health::
+  - Ping check every 30 seconds
+  - Automatic reconnection on failure
+  - Alert on persistent connection loss
+  - Memory usage monitoring
+
+## φ{Persistence} :: Data Persistence
+
+### Receipt Storage
+Receipt.Persistence::
+  - All receipts stored in Redis list: "receipts"
+  - Limited to last 100 receipts (LRANGE receipts 0 99)
+  - Individual receipts by ID: "receipt:{receipt_id}"
+  - Automatic cleanup of old receipts
+
+Receipt.Schema::
+  ```json
+  {
+    "receipt_id": "uuid",
+    "timestamp_utc": "ISO8601",
+    "op_name": "operation_name",
+    "pico_trace": {...},
+    "endstate": "SUCCESS|REFUSAL|UNKNOWN|FAULT"
+  }
+  ```
+
+### Imprint Integration
+Imprint.Storage::
+  - Active imprint ID: "active:imprint"
+  - Imprint data: "imprint:{imprint_id}"
+  - Binary encoded Elixir terms (Base64)
+  - Automatic loading on system start
+
+### Evidence Ledger
+Evidence.Persistence::
+  - Evidence indexes: "evidence:{evidence_id}"
+  - Claim ledgers: "ledger:{ledger_id}"
+  - Binding relationships: "binding:{claim_id}:{evidence_id}"
+  - Versioned storage with timestamps
+
+## τ{Management} :: State Management
+
+### Memory Management
+Memory.Controls::
+  - Automatic cleanup of expired data
+  - Memory usage limits and alerts
+  - Compression for large artifacts
+  - LRU eviction for cache data
+
+Memory.Monitoring::
+  ```redis
+  INFO memory
+  MEMORY USAGE receipts
+  MEMORY USAGE imprint:active
+  ```
+
+### Backup and Recovery
+Backup.Strategy::
+  - Redis RDB snapshots every 15 minutes
+  - AOF (Append Only File) for transaction logging
+  - Automatic backup to persistent storage
+  - Point-in-time recovery capability
+
+Recovery.Procedures::
+  - Automatic restart on Redis failure
+  - State reconstruction from receipts
+  - Imprint reloading from backups
+  - Consistency verification across restarts
+
+### Performance Optimization
+Performance.Tuning::
+  - Connection pooling (10 connections)
+  - Pipelined operations for bulk writes
+  - Key expiration for temporary data
+  - Index optimization for lookups
+
+Performance.Metrics::
+  - Operations per second
+  - Memory usage trends
+  - Connection pool utilization
+  - Cache hit/miss ratios
+
+## Integration Points
+
+### With PHENO Pipeline
+PHENO.Integration::
+  - **⊢ Acquire**: Load active imprint from Redis
+  - **⟿ Harden**: Store evidence indexes and claim ledgers
+  - **▷ Project**: Write receipts and update state
+  - Receipt emission mandatory for all endstates
+
+### With Imprint.ID
+Imprint.ID.Integration::
+  - Use Imprint.ID library functions for governance
+  - Redis shared between vec3 and Imprint.ID
+  - Receipt format compatibility
+  - Route validation through imprint data
+
+### With ZENS3N
+ZENS3N.Integration::
+  - LEX namespace registry in Redis
+  - Shared state with ZENS3N operations
+  - Consistent imprint management
+  - Cross-system receipt sharing
+
+## Error Handling
+
+Connection.Errors::
+  - **Connection Lost**: Automatic retry with exponential backoff
+  - **Memory Full**: Alert and cleanup expired data
+  - **Data Corruption**: Reconstruct from backups
+  - **Performance Degradation**: Scale connection pool
+
+Recovery.Protocols::
+  - **Redis Down**: Continue with in-memory state, sync when restored
+  - **Data Loss**: Reconstruct from receipts and evidence
+  - **Consistency Issues**: Validation and repair procedures
+  - **Performance Issues**: Automatic tuning adjustments
+
+## Implementation Status
+
+Current.Status::
+  - ✅ Redis connection management
+  - ✅ Receipt storage and retrieval
+  - ✅ Imprint loading and caching
+  - ✅ Basic health monitoring
+  - 🚧 Evidence ledger implementation
+  - 🚧 Automatic Redis startup
+  - 🚧 Performance optimization
+  - 🚧 Backup and recovery
+
+Next.Steps::
+  1. Implement evidence index storage
+  2. Add automatic Redis management
+  3. Create backup procedures
+  4. Add performance monitoring
+  5. Implement recovery protocols
+
+:: ∎
+
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂〘・.°𝚫〙

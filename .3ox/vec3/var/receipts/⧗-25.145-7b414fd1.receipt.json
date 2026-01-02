@@ -1,0 +1,20 @@
+{
+  "job_id": "⧗-25.145-7b414fd1",
+  "op": "TEST.LOG",
+  "status": "done",
+  "pheno": {
+    "rho": "test.data",
+    "phi": "log.write",
+    "tau": "receipt"
+  },
+  "route": "0ut.3ox",
+  "started_at": "2025-12-31T15:03:04-06:00",
+  "finished_at": "2025-12-31T15:03:07-06:00",
+  "artifacts": [
+    "⧗-25.145-7b414fd1.output"
+  ],
+  "seal": {
+    "type": "sha256",
+    "value": "ebae16f57f0d879a2ddbd6039dae76e122944f2da3cefb17bd1269d6cd5afb8e"
+  }
+}

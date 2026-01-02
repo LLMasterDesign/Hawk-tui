@@ -1,0 +1,175 @@
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂///
+▛//▞▞ ⟦⎊⟧ :: ⧗-25.125 // PICO.TRACE :: Execution Tracing ▞▞
+
+▛▞// PICO.TRACE :: ρ{Definition}.φ{Implementation}.τ{Usage} ▹
+⫸ 〔execution.trace.system〕
+
+# PICO TRACE: Execution Tracing System
+
+## ρ{Definition} :: Trace Architecture
+
+Trace.Purpose::
+  - **Witness Creation**: Record complete execution path for auditing
+  - **Debug Support**: Enable post-mortem analysis of failures
+  - **Compliance Proof**: Demonstrate proper PiCO sequence adherence
+  - **Performance Monitoring**: Track execution timing and bottlenecks
+
+Trace.Structure::
+  ```json
+  {
+    "trace_id": "uuid-v4",
+    "operation_id": "pheno-op-uuid",
+    "pico_sequence": {
+      "acquire": {...},
+      "transform": {...},
+      "harden": {...},
+      "project": {...}
+    },
+    "execution_metadata": {
+      "start_time": "ISO8601",
+      "end_time": "ISO8601",
+      "total_duration_ms": 123,
+      "pheno_version": "1.0.0"
+    }
+  }
+  ```
+
+## φ{Implementation} :: Trace Collection
+
+### ⊢ ACQUIRE Phase Tracing
+Acquire.Trace.Points::
+  - **input.receipt**: Timestamp of input binding
+  - **evidence.indexing**: Evidence sources discovered and indexed
+  - **context.establishment**: Runtime context bounds set
+  - **validation.gate**: Required inputs check result
+
+Acquire.Trace.Data::
+  ```json
+  "acquire": {
+    "timestamp": "2025-12-31T12:00:00Z",
+    "inputs_bound": true,
+    "evidence_sources": 5,
+    "context_hash": "sha256...",
+    "gate_passed": true
+  }
+  ```
+
+### ⇨ TRANSFORM Phase Tracing
+Transform.Trace.Points::
+  - **token.normalization**: Raw tokens processed into triplet
+  - **slot.mapping**: Triplet mapped to PHENO slots
+  - **binding.proposal**: Initial slot assignments created
+  - **claim.extraction**: Claims identified from proposal
+
+Transform.Trace.Data::
+  ```json
+  "transform": {
+    "timestamp": "2025-12-31T12:00:01Z",
+    "tokens_normalized": true,
+    "slots_mapped": 5,
+    "bindings_proposed": true,
+    "claims_extracted": 3
+  }
+  ```
+
+### ⟿ HARDEN Phase Tracing
+Harden.Trace.Points::
+  - **resilience.application**: ν operations applied
+  - **governance.checks**: λ policy evaluations
+  - **contract.validation**: Output schema verification
+  - **endstate.determination**: SUCCESS/REFUSAL/UNKNOWN/FAULT decided
+
+Harden.Trace.Data::
+  ```json
+  "harden": {
+    "timestamp": "2025-12-31T12:00:02Z",
+    "resilience_applied": true,
+    "governance_checks": 4,
+    "contract_validated": true,
+    "endstate": "SUCCESS",
+    "unknowns_handled": 0,
+    "policy_flags": []
+  }
+  ```
+
+### ▷ PROJECT Phase Tracing
+Project.Trace.Points::
+  - **artifact.rendering**: Capsule and schema creation
+  - **channel.writing**: Output emission to appropriate channels
+  - **registry.publication**: Publishing to LEX registry (if allowed)
+  - **receipt.emission**: Final receipt creation
+
+Project.Trace.Data::
+  ```json
+  "project": {
+    "timestamp": "2025-12-31T12:00:03Z",
+    "artifacts_rendered": 2,
+    "channels_written": ["CH0.core", "CH1.receipt", "CH2.primary"],
+    "registry_published": true,
+    "receipt_emitted": true
+  }
+  ```
+
+## τ{Usage} :: Trace Applications
+
+### Compliance Verification
+Compliance.Checks::
+  - **Sequence Integrity**: Verify ⊢→⇨→⟿→▷ order maintained
+  - **Gate Adherence**: Confirm all phase gates executed
+  - **Channel Separation**: Validate outputs went to correct channels
+  - **Receipt Completeness**: Ensure all required fields present
+
+### Performance Analysis
+Performance.Metrics::
+  - **Phase Durations**: Time spent in each PiCO phase
+  - **Bottleneck Identification**: Slowest operations flagged
+  - **Resource Usage**: Memory, CPU, I/O tracking
+  - **Optimization Opportunities**: Inefficient patterns detected
+
+### Debug Support
+Debug.Capabilities::
+  - **Failure Replay**: Reconstruct execution path to failure point
+  - **State Inspection**: Examine PHENO slot values at each phase
+  - **Evidence Audit**: Review claim-to-evidence bindings
+  - **Policy Evaluation**: Understand λ decision logic
+
+### Audit Trail
+Audit.Functions::
+  - **Operation History**: Complete execution log for compliance
+  - **Decision Rationale**: Why specific endstate was reached
+  - **Evidence Chain**: Full provenance of all claims
+  - **Policy Application**: Which λ rules were triggered
+
+## Trace Storage and Retrieval
+
+Storage.Strategy::
+  - **Receipt Integration**: Traces stored as part of receipts
+  - **Channel CH0**: Detailed traces written to core channel
+  - **Compression**: Large traces compressed for storage
+  - **Retention Policy**: Configurable retention based on endstate
+
+Retrieval.Patterns::
+  - **By Operation ID**: Lookup specific execution
+  - **By Time Range**: Query executions in time window
+  - **By Endstate**: Find all failures or refusals
+  - **By Namespace**: Operations in specific domain
+
+## Trace Validation
+
+Validation.Rules::
+  - **Completeness**: All PiCO phases must have trace entries
+  - **Sequence**: Timestamps must be monotonically increasing
+  - **Consistency**: Endstate must match trace conclusions
+  - **Integrity**: Traces must be tamper-evident
+
+## Implementation Integration
+
+Integration.Points::
+  - **PHENO Compiler**: Automatic trace collection during execution
+  - **Receipt Writer**: Traces included in receipt emission
+  - **Channel Manager**: Traces routed to appropriate output streams
+  - **Audit System**: Traces used for compliance verification
+
+:: ∎
+
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂〘・.°𝚫〙

@@ -1,0 +1,20 @@
+{
+  "job_id": "⧗-25.145-f97daade",
+  "op": "PHENO.VALIDATE",
+  "status": "done",
+  "pheno": {
+    "rho": "test.data",
+    "phi": "log.write",
+    "tau": "receipt"
+  },
+  "route": "0ut.3ox",
+  "started_at": "2025-12-31T15:25:07-06:00",
+  "finished_at": "2025-12-31T15:25:10-06:00",
+  "artifacts": [
+    "⧗-25.145-f97daade.output"
+  ],
+  "seal": {
+    "type": "sha256",
+    "value": "1413b90933334d950bce882197a389272f6a83fc05cd4608d1096ce63e208eae"
+  }
+}
