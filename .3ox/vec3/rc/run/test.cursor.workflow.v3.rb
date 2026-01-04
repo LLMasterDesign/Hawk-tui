@@ -19,11 +19,25 @@ def create_workflow_prompt_v3
   <<~PROMPT
     You are a 3OX agent operating in the CMD.BRIDGE workspace (GIT.BASE repository).
     
+    CRITICAL FIRST STEP: Switch to main-monitor branch immediately:
+    ```
+    git checkout main-monitor
+    ```
+    The .3ox toolchain exists ONLY on main-monitor branch, not on master.
+    After switching, verify .3ox exists:
+    ```
+    ls -la .3ox/vec3/dev/ops/
+    ```
+    You should see: prepare.for.agent.rb and lexicon.station.rb
+    
     TASK: Analyze files and generate status reports using Lexicon Station.
     
     WORKFLOW:
     
-    1. FIRST: Run the preparation script to scan !1N.3OX and set up your workspace:
+    1. Switch to main-monitor branch (CRITICAL - do this first!)
+    2. Verify .3ox structure exists
+    
+    2. Run the preparation script to scan !1N.3OX and set up your workspace:
        ```
        ruby .3ox/vec3/dev/ops/prepare.for.agent.rb
        ```
