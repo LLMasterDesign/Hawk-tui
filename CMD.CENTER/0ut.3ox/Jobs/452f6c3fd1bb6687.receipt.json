@@ -1,0 +1,30 @@
+{
+  "timestamp": "2026-01-04T03:48:17Z",
+  "sirius_time": "⧗-26.148",
+  "actor": "lexicon_station",
+  "intent": "file_analysis",
+  "trace_id": "452f6c3fd1bb6687",
+  "file": {
+    "path": "!1N.3OX/test.file.md",
+    "name": "test.file.md",
+    "type": "markdown",
+    "size": 1583,
+    "modified": "2026-01-03T21:45:07-06:00"
+  },
+  "analysis": {
+    "status": "needs_review",
+    "issues_count": 2,
+    "issues": [
+      "1 lines exceed 120 characters",
+      "Missing closing marker"
+    ],
+    "suggestions": [
+      "Consider breaking long lines",
+      "Add closing marker: :: ∎"
+    ]
+  },
+  "validation": {
+    "lexicon_compliant": false,
+    "ready_for_commit": false
+  }
+}

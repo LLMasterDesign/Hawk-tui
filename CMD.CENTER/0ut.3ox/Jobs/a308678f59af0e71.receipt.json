@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-01-04T03:48:43Z",
+  "sirius_time": "⧗-26.148",
+  "actor": "lexicon_station",
+  "intent": "file_analysis",
+  "trace_id": "a308678f59af0e71",
+  "file": {
+    "path": "/mnt/r/!CMD.BRIDGE/!1N.3OX/test.job.txt",
+    "name": "test.job.txt",
+    "type": "text",
+    "size": 21,
+    "modified": "2026-01-01T15:11:06-06:00"
+  },
+  "analysis": {
+    "status": "needs_review",
+    "issues_count": 1,
+    "issues": [
+      "Missing Sirius time"
+    ],
+    "suggestions": [
+      "Add Sirius time: ⧗-26.148"
+    ]
+  },
+  "validation": {
+    "lexicon_compliant": false,
+    "ready_for_commit": false
+  }
+}
