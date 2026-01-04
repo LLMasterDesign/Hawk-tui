@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-01-04T04:39:39Z",
+  "sirius_time": "⧗-26.148",
+  "source_dir": "/mnt/r/!CMD.BRIDGE/!1N.3OX",
+  "workdesk_dir": "/mnt/r/!CMD.BRIDGE/!WORKDESK/Agent.1767501579",
+  "files": [
+    {
+      "name": "test.file.md",
+      "source_path": "/mnt/r/!CMD.BRIDGE/!1N.3OX/test.file.md",
+      "workdesk_path": "/mnt/r/!CMD.BRIDGE/!WORKDESK/Agent.1767501579/test.file.md",
+      "relative_path": "!WORKDESK/Agent.1767501579/test.file.md",
+      "type": "markdown",
+      "size": 1583,
+      "mtime": "2026-01-04T03:45:07Z"
+    },
+    {
+      "name": "test.job.txt",
+      "source_path": "/mnt/r/!CMD.BRIDGE/!1N.3OX/test.job.txt",
+      "workdesk_path": "/mnt/r/!CMD.BRIDGE/!WORKDESK/Agent.1767501579/test.job.txt",
+      "relative_path": "!WORKDESK/Agent.1767501579/test.job.txt",
+      "type": "text",
+      "size": 21,
+      "mtime": "2026-01-01T21:11:06Z"
+    },
+    {
+      "name": "test.receipts.job.txt",
+      "source_path": "/mnt/r/!CMD.BRIDGE/!1N.3OX/test.receipts.job.txt",
+      "workdesk_path": "/mnt/r/!CMD.BRIDGE/!WORKDESK/Agent.1767501579/test.receipts.job.txt",
+      "relative_path": "!WORKDESK/Agent.1767501579/test.receipts.job.txt",
+      "type": "text",
+      "size": 61,
+      "mtime": "2026-01-02T03:29:50Z"
+    }
+  ]
+}
