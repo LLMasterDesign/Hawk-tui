@@ -129,26 +129,47 @@ openai_request() {
 EOF
 )
 
-    local response
-    if ! response=$(curl -s -X POST "https://api.openai.com/v1/chat/completions" \
-        -H "Authorization: Bearer $api_key" \
-        -H "Content-Type: application/json" \
-        -d "$payload" 2>/dev/null); then
-        log "ERROR" "OpenAI API request failed"
-        return 1
-    fi
-
-    # Extract response content
-    if echo "$response" | jq -e '.error' >/dev/null 2>&1; then
-        local error_msg
-        error_msg=$(echo "$response" | jq -r '.error.message // "Unknown OpenAI error"')
-        log "ERROR" "OpenAI API error: $error_msg"
-        return 1
-    fi
-
     if [ "$STREAMING" = "true" ]; then
-        echo "$response" | jq -r '.choices[0].delta.content // empty' 2>/dev/null || echo ""
+        # Streaming response - process line by line
+        if ! curl -s -N -X POST "https://api.openai.com/v1/chat/completions" \
+            -H "Authorization: Bearer $api_key" \
+            -H "Content-Type: application/json" \
+            -d "$payload" 2>/dev/null | while IFS= read -r line; do
+                # Parse SSE format: "data: {json}"
+                if [[ $line == data:\ * ]]; then
+                    json_data="${line#data: }"
+                    if [ "$json_data" = "[DONE]" ]; then
+                        break
+                    fi
+                    # Extract content from streaming chunk
+                    content=$(echo "$json_data" | jq -r '.choices[0].delta.content // empty' 2>/dev/null || echo "")
+                    if [ -n "$content" ] && [ "$content" != "null" ]; then
+                        echo -n "$content"
+                    fi
+                fi
+            done; then
+            log "ERROR" "OpenAI streaming request failed"
+            return 1
+        fi
     else
+        # Non-streaming response
+        local response
+        if ! response=$(curl -s -X POST "https://api.openai.com/v1/chat/completions" \
+            -H "Authorization: Bearer $api_key" \
+            -H "Content-Type: application/json" \
+            -d "$payload" 2>/dev/null); then
+            log "ERROR" "OpenAI API request failed"
+            return 1
+        fi
+
+        # Check for errors
+        if echo "$response" | jq -e '.error' >/dev/null 2>&1; then
+            local error_msg
+            error_msg=$(echo "$response" | jq -r '.error.message // "Unknown OpenAI error"')
+            log "ERROR" "OpenAI API error: $error_msg"
+            return 1
+        fi
+
         echo "$response" | jq -r '.choices[0].message.content // "No response"' 2>/dev/null
     fi
 }
@@ -338,6 +359,12 @@ main() {
     local temperature="$TEMPERATURE"
     local max_tokens="$MAX_TOKENS"
     local streaming="$STREAMING"
+
+    # Check if first argument is a provider name
+    if [[ $# -gt 0 ]] && [[ "$1" =~ ^(openai|claude|ollama)$ ]]; then
+        provider="$1"
+        shift
+    fi
 
     # Parse command line arguments
     while [[ $# -gt 0 ]]; do

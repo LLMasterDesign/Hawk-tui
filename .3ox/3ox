@@ -1,0 +1,358 @@
+#!/usr/bin/env ruby
+#
+# 3OX :: CMD.BRIDGE Command Interface
+# Core command system for both system and user operations
+#
+
+require 'fileutils'
+
+# Find .3ox directory (this script should be in .3ox/)
+DOT3OX_DIR = File.expand_path(File.dirname(__FILE__))
+VEC3_ROOT = File.join(DOT3OX_DIR, 'vec3')
+PROJECT_ROOT = File.expand_path('..', DOT3OX_DIR)
+
+# Add vec3 to path
+$LOAD_PATH.unshift(VEC3_ROOT) unless $LOAD_PATH.include?(VEC3_ROOT)
+
+require_relative 'vec3/dev/ops/lib/helpers.rb'
+
+class ThreeOXCLI
+  include Helpers
+
+  def initialize
+    @dot3ox_dir = DOT3OX_DIR
+    @vec3_root = VEC3_ROOT
+    @project_root = PROJECT_ROOT
+  end
+
+  def run(args)
+    command = args.shift || 'help'
+
+    case command
+    when 'start'
+      cmd_start(args)
+    when 'stop'
+      cmd_stop(args)
+    when 'create'
+      cmd_create(args)
+    when 'run'
+      cmd_run(args)
+    when 'station'
+      cmd_station(args)
+    when 'status'
+      cmd_status(args)
+    when 'query'
+      cmd_query(args)
+    when 'help', '--help', '-h'
+      cmd_help
+    else
+      puts "▛▞// Unknown command: #{command}"
+      puts "▛▞// Use '3ox help' for available commands"
+      exit 1
+    end
+  end
+
+  def cmd_start(args)
+    service = args.shift || 'brains'
+    
+    case service
+    when 'brains', 'brains.exe'
+      start_brains_exe
+    when 'station'
+      start_station
+    when 'all'
+      start_brains_exe
+      start_station
+    else
+      puts "▛▞// Unknown service: #{service}"
+      puts "▛▞// Available: brains, station, all"
+      exit 1
+    end
+  end
+
+  def cmd_stop(args)
+    service = args.shift || 'brains'
+    
+    case service
+    when 'brains', 'brains.exe'
+      stop_brains_exe
+    when 'station'
+      stop_station
+    when 'all'
+      stop_brains_exe
+      stop_station
+    else
+      puts "▛▞// Unknown service: #{service}"
+      exit 1
+    end
+  end
+
+  def cmd_create(args)
+    type = args.shift
+    
+    unless type
+      puts "▛▞// Usage: 3ox create <type> [args...]"
+      puts "▛▞// Types: job, receipt, session"
+      exit 1
+    end
+    
+    case type
+    when 'job'
+      puts "▛▞// Creating job..."
+      # TODO: Implement job creation
+    when 'receipt'
+      puts "▛▞// Creating receipt..."
+      # TODO: Implement receipt creation
+    when 'session'
+      puts "▛▞// Creating session..."
+      # TODO: Implement session creation
+    else
+      puts "▛▞// Unknown create type: #{type}"
+      exit 1
+    end
+  end
+
+  def cmd_run(args)
+    # Delegate to run.rb
+    run_rb_path = File.join(@dot3ox_dir, 'vec3', 'lib', 'runners', 'run.rb')
+    
+    unless File.exist?(run_rb_path)
+      puts "▛▞// ERROR: run.rb not found at #{run_rb_path}"
+      exit 1
+    end
+    
+    exec('ruby', run_rb_path, *args)
+  end
+
+  def cmd_station(args)
+    action = args.shift || 'start'
+    
+    case action
+    when 'start'
+      start_station
+    when 'stop'
+      stop_station
+    when 'status'
+      station_status
+    else
+      puts "▛▞// Unknown station action: #{action}"
+      puts "▛▞// Available: start, stop, status"
+      exit 1
+    end
+  end
+
+  def cmd_status(args)
+    puts "▛▞// CMD.BRIDGE Status"
+    puts "▛▞// Sirius time: #{sirius_time()}"
+    puts ""
+    
+    # Check running processes
+    brains_running = `pgrep -f "brains.exe.rb" 2>/dev/null`.strip != ''
+    station_running = `pgrep -f "station.serve.rb" 2>/dev/null`.strip != ''
+    
+    puts "Services:"
+    puts "  #{brains_running ? '✓' : '✗'} brains.exe: #{brains_running ? 'running' : 'stopped'}"
+    puts "  #{station_running ? '✓' : '✗'} station: #{station_running ? 'running' : 'stopped'}"
+    puts ""
+    
+    # Check Redis
+    begin
+      require_relative 'vec3/dev/ops/cache/redis.rb'
+      if RedisCache.redis_available?
+        health = RedisCache.redis_health_check
+        puts "Redis: #{health[:status]}"
+        if health[:status] == 'healthy'
+          puts "  DB Size: #{health[:db_size]} keys"
+          puts "  Response: #{health[:response_time_ms]}ms"
+        end
+        
+        # Unified state
+        state = RedisCache.redis_get('cmd.bridge:unified:state')
+        if state && !state.empty?
+          puts ""
+          puts "Unified Watch State: Active"
+          puts "  Watcher: #{state['watcher_id'] || 'none'}"
+          puts "  Files: #{state['stats']&.dig('total_files') || 0}"
+          puts "  Components: #{state['stats']&.dig('active_components') || 0}"
+        end
+      else
+        puts "Redis: unavailable"
+      end
+    rescue => e
+      puts "Redis: error (#{e.message})"
+    end
+  end
+
+  def cmd_query(args)
+    type = args.shift || 'state'
+    
+    case type
+    when 'state'
+      query_state
+    when '1n3ox', '1N.3OX'
+      query_1n3ox(args.shift)
+    else
+      puts "▛▞// Unknown query type: #{type}"
+      puts "▛▞// Available: state, 1n3ox"
+      exit 1
+    end
+  end
+
+  def cmd_help
+    puts "▛▞// 3OX Command Interface"
+    puts ""
+    puts "Core Commands:"
+    puts "  3ox start [brains|station|all]  - Start services"
+    puts "  3ox stop [brains|station|all]    - Stop services"
+    puts "  3ox run <command>               - Run command via run.rb"
+    puts "  3ox status                      - Show system status"
+    puts ""
+    puts "Station Commands:"
+    puts "  3ox station start               - Start station watcher"
+    puts "  3ox station stop                - Stop station watcher"
+    puts "  3ox station status              - Station status"
+    puts ""
+    puts "Query Commands:"
+    puts "  3ox query state                 - Query unified watch state"
+    puts "  3ox query 1n3ox [path]          - Query 1N.3OX directory"
+    puts ""
+    puts "Create Commands:"
+    puts "  3ox create <type>               - Create resources (job/receipt/session)"
+    puts ""
+    puts "Help:"
+    puts "  3ox help                        - Show this help"
+  end
+
+  # ============================================================================
+  # SERVICE MANAGEMENT
+  # ============================================================================
+
+  def start_brains_exe
+    brains_path = File.join(@vec3_root, 'lib', 'brains.exe.rb')
+    
+    unless File.exist?(brains_path)
+      puts "▛▞// ERROR: brains.exe.rb not found at #{brains_path}"
+      exit 1
+    end
+    
+    # Check if already running
+    if `pgrep -f "brains.exe.rb" 2>/dev/null`.strip != ''
+      puts "▛▞// brains.exe is already running"
+      return
+    end
+    
+    puts "▛▞// Starting brains.exe..."
+    puts "▛▞// This will start unified watch state monitoring"
+    
+    # Start in background
+    pid = spawn('ruby', brains_path)
+    Process.detach(pid)
+    
+    sleep 1
+    
+    if `pgrep -f "brains.exe.rb" 2>/dev/null`.strip != ''
+      puts "▛▞// ✓ brains.exe started (PID: #{pid})"
+    else
+      puts "▛▞// ✗ Failed to start brains.exe"
+      exit 1
+    end
+  end
+
+  def stop_brains_exe
+    pids = `pgrep -f "brains.exe.rb" 2>/dev/null`.strip.split("\n")
+    
+    if pids.empty?
+      puts "▛▞// brains.exe is not running"
+      return
+    end
+    
+    puts "▛▞// Stopping brains.exe..."
+    pids.each do |pid|
+      Process.kill('TERM', pid.to_i)
+    end
+    
+    sleep 1
+    
+    if `pgrep -f "brains.exe.rb" 2>/dev/null`.strip == ''
+      puts "▛▞// ✓ brains.exe stopped"
+    else
+      puts "▛▞// ✗ Failed to stop brains.exe"
+    end
+  end
+
+  def start_station
+    station_path = File.join(@vec3_root, 'dev', 'ops', 'station.serve.rb')
+    
+    unless File.exist?(station_path)
+      puts "▛▞// ERROR: station.serve.rb not found at #{station_path}"
+      exit 1
+    end
+    
+    if `pgrep -f "station.serve.rb" 2>/dev/null`.strip != ''
+      puts "▛▞// station is already running"
+      return
+    end
+    
+    puts "▛▞// Starting station watcher..."
+    
+    pid = spawn('ruby', station_path)
+    Process.detach(pid)
+    
+    sleep 1
+    
+    if `pgrep -f "station.serve.rb" 2>/dev/null`.strip != ''
+      puts "▛▞// ✓ station started (PID: #{pid})"
+    else
+      puts "▛▞// ✗ Failed to start station"
+      exit 1
+    end
+  end
+
+  def stop_station
+    pids = `pgrep -f "station.serve.rb" 2>/dev/null`.strip.split("\n")
+    
+    if pids.empty?
+      puts "▛▞// station is not running"
+      return
+    end
+    
+    puts "▛▞// Stopping station..."
+    pids.each do |pid|
+      Process.kill('TERM', pid.to_i)
+    end
+    
+    sleep 1
+    
+    if `pgrep -f "station.serve.rb" 2>/dev/null`.strip == ''
+      puts "▛▞// ✓ station stopped"
+    else
+      puts "▛▞// ✗ Failed to stop station"
+    end
+  end
+
+  def station_status
+    running = `pgrep -f "station.serve.rb" 2>/dev/null`.strip != ''
+    puts "▛▞// Station: #{running ? 'running' : 'stopped'}"
+  end
+
+  # ============================================================================
+  # QUERY HELPERS
+  # ============================================================================
+
+  def query_state
+    require_relative 'vec3/dev/ops/query.state.rb'
+    system('ruby', File.join(@vec3_root, 'dev', 'ops', 'query.state.rb'))
+  end
+
+  def query_1n3ox(path = nil)
+    require_relative 'vec3/dev/ops/query.1n3ox.rb'
+    args = path ? [path] : []
+    system('ruby', File.join(@vec3_root, 'dev', 'ops', 'query.1n3ox.rb'), *args)
+  end
+end
+
+# Main execution
+if __FILE__ == $0
+  cli = ThreeOXCLI.new
+  cli.run(ARGV)
+end

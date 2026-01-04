@@ -128,14 +128,33 @@ class CMDDispatcher
   end
 
   def cmd_ask(args)
-    prompt = args.join(' ')
+    if args.empty?
+      puts "▛▞// Usage: run.rb ask <provider> <prompt>"
+      puts "▛▞//        run.rb ask <prompt>  (uses default provider)"
+      return
+    end
+
+    # Check if first arg is a provider name
+    provider = nil
+    prompt_args = args
+
+    if ['openai', 'claude', 'ollama'].include?(args[0])
+      provider = args[0]
+      prompt_args = args[1..-1]
+    end
+
+    prompt = prompt_args.join(' ')
     if prompt.empty?
-      puts "▛▞// Usage: run.rb ask <prompt>"
+      puts "▛▞// Usage: run.rb ask <provider> <prompt>"
       return
     end
 
     puts "▛▞// Asking AI provider..."
-    dispatch_tool('ask', prompt)
+    if provider
+      dispatch_tool('ask', provider, prompt)
+    else
+      dispatch_tool('ask', prompt)
+    end
   end
 
   def cmd_clock(args)
@@ -153,7 +172,12 @@ class CMDDispatcher
 
   def cmd_telegram(args)
     puts "▛▞// Starting Telegram bot..."
-    dispatch_tool('bot')
+    bot_path = File.join(@vec3_root, 'dev', 'io', 'tg', 'bot.rb')
+    if File.exist?(bot_path)
+      system('ruby', bot_path)
+    else
+      puts "▛▞// ERROR: Bot file not found at #{bot_path}"
+    end
   end
 
   def cmd_rest(args)
@@ -300,6 +324,18 @@ class CMDDispatcher
       receipts_count = Dir.glob(File.join(var_dir, 'receipts', '**', '*.json')).length
       puts "▛▞// Stored Receipts: #{receipts_count}"
     end
+
+    # Unified state status
+    if RedisCache.redis_available?
+      require_relative '../dev/ops/unified.watcher.rb'
+      state = UnifiedWatcher.get_unified_state
+      unless state.empty?
+        puts "▛▞// Unified State: Active"
+        puts "▛▞//   Components: #{state['components']&.length || 0}"
+        puts "▛▞//   Files Tracked: #{state['stats']&.dig('total_files') || 0}"
+        puts "▛▞//   Last Update: #{state['updated_at']}"
+      end
+    end
   end
 
   def check_running_processes
@@ -321,6 +357,106 @@ class CMDDispatcher
     end
 
     processes.empty? ? ['none'] : processes
+  end
+
+  def cmd_watch(args)
+    require_relative '../dev/ops/unified.watcher.rb'
+    
+    puts "▛▞// Starting Unified Watcher..."
+    puts "▛▞// This maintains single active watch state for:"
+    puts "▛▞//   - Component heartbeats"
+    puts "▛▞//   - File changes and locations"
+    puts "▛▞//   - System state"
+    puts "▛▞//"
+    puts "▛▞// State stored in Redis: cmd.bridge:unified:state"
+    puts "▛▞// Press Ctrl+C to stop"
+    puts ""
+    
+    UnifiedWatcher.run_watcher
+  end
+
+  def cmd_query(args)
+    require_relative '../dev/ops/unified.watcher.rb'
+    require 'json'
+    
+    query_type = args.shift || 'state'
+    
+    case query_type
+    when 'state'
+      state = UnifiedWatcher.get_unified_state
+      if state.empty?
+        puts "▛▞// No unified state found. Start watcher with: run.rb watch"
+        return
+      end
+      
+      puts "▛▞// Unified State (updated: #{state['updated_at']})"
+      puts "▛▞//"
+      puts "▛▞// Components:"
+      state['components']&.each do |name, comp|
+        status_icon = comp['alive'] ? '✓' : '✗'
+        puts "▛▞//   #{status_icon} #{name}: #{comp['status']} (age: #{comp['age_seconds']}s)"
+      end
+      
+      puts "▛▞//"
+      puts "▛▞// Files: #{state['stats']&.dig('total_files') || 0} tracked"
+      puts "▛▞//   New: #{state['stats']&.dig('new_files') || 0}"
+      puts "▛▞//   Modified: #{state['stats']&.dig('modified_files') || 0}"
+      puts "▛▞//   Moved: #{state['stats']&.dig('moved_files') || 0}"
+      puts "▛▞//   Deleted: #{state['stats']&.dig('deleted_files') || 0}"
+      
+    when 'file'
+      file_path = args.shift
+      unless file_path
+        puts "▛▞// Usage: run.rb query file <path>"
+        return
+      end
+      
+      file_info = UnifiedWatcher.query_location(file_path)
+      if file_info
+        puts "▛▞// File: #{file_path}"
+        puts "▛▞//   Location: #{file_info['location']}"
+        puts "▛▞//   Size: #{file_info['size']} bytes"
+        puts "▛▞//   Modified: #{file_info['mtime']}"
+        puts "▛▞//   Hash: #{file_info['hash']}"
+      else
+        puts "▛▞// File not found in index: #{file_path}"
+      end
+      
+    when 'location'
+      location = args.shift
+      unless location
+        puts "▛▞// Usage: run.rb query location <directory>"
+        return
+      end
+      
+      files = UnifiedWatcher.query_files_in_location(location)
+      if files && !files.empty?
+        puts "▛▞// Files in: #{location}"
+        files.each do |file_path|
+          puts "▛▞//   - #{file_path}"
+        end
+      else
+        puts "▛▞// No files found in: #{location}"
+      end
+      
+    when 'heartbeats'
+      state = UnifiedWatcher.get_unified_state
+      heartbeats = state['heartbeats'] || {}
+      
+      puts "▛▞// Component Heartbeats:"
+      heartbeats.each do |component, heartbeat|
+        age = heartbeat['age_seconds'] || 999999
+        status_icon = age < 90 ? '✓' : '✗'
+        puts "▛▞//   #{status_icon} #{component}: #{heartbeat['status']} (last seen: #{age}s ago)"
+      end
+      
+    else
+      puts "▛▞// Query types:"
+      puts "▛▞//   state      - Show unified state summary"
+      puts "▛▞//   file <path> - Query file location"
+      puts "▛▞//   location <dir> - List files in location"
+      puts "▛▞//   heartbeats - Show component heartbeats"
+    end
   end
 
   def cmd_help(args)

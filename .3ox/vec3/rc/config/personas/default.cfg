@@ -2,9 +2,10 @@
 # Core persona for general PHENO operations
 
 [persona]
-name = "Default Agent"
-description = "Standard PHENO processing agent for general operations"
+name = "CENTERAL"
+description = "CMD.BRIDGE central processing agent for PHENO operations"
 version = "1.0.0"
+system = "CMD.BRIDGE"
 
 [pheno.slots]
 required = ["rho", "phi", "tau"]

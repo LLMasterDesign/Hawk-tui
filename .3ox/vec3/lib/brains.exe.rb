@@ -27,6 +27,12 @@ class BrainsWorker
   PROCESSING_QUEUE = 'jobs:processing'
   POLL_INTERVAL = 1  # seconds
   HEARTBEAT_INTERVAL = 30  # seconds
+  FILE_SCAN_INTERVAL = 30  # seconds - scan file system
+  STATE_UPDATE_INTERVAL = 10  # seconds - update unified state
+  HEARTBEAT_TIMEOUT = 90  # seconds - component considered dead
+
+  # Redis keys
+  REDIS_STATE_KEY = 'cmd.bridge:unified:state'
 
   def initialize(worker_id = nil)
     @worker_id = worker_id || generate_worker_id
@@ -35,6 +41,9 @@ class BrainsWorker
     @jobs_failed = 0
     @start_time = Time.now
     @last_heartbeat = Time.now
+    @last_file_scan = Time.now
+    @last_state_update = Time.now
+    @file_index = {}
 
     # Load brain configuration
     @brain_config = load_brain_config
@@ -42,6 +51,9 @@ class BrainsWorker
     
     # Check Imprint availability
     @imprint_enabled = check_imprint_availability
+
+    # Initialize unified state
+    initialize_unified_state
 
     log_operation('brains_init', 'COMPLETE', "Worker: #{@worker_id}, Imprint: #{@imprint_enabled ? 'enabled' : 'disabled'}")
   end
@@ -434,6 +446,246 @@ class BrainsWorker
   end
 
   # ============================================================================
+  # UNIFIED WATCH STATE
+  # ============================================================================
+
+  def initialize_unified_state
+    return unless RedisCache.redis_available?
+
+    initial_state = {
+      'version' => '1.0.0',
+      'started_at' => Time.now.utc.iso8601,
+      'sirius_time' => sirius_time(),
+      'components' => {},
+      'files' => {},
+      'locations' => {},
+      'heartbeats' => {},
+      'last_scan' => nil,
+      'last_update' => Time.now.utc.iso8601,
+      'watcher_id' => @worker_id
+    }
+    
+    RedisCache.redis_set(REDIS_STATE_KEY, initial_state)
+    log_operation('unified_state', 'COMPLETE', 'Unified watch state initialized')
+  end
+
+  def scan_component_heartbeats
+    return {} unless RedisCache.redis_available?
+
+    conn = RedisCache.get_redis_connection
+    return {} unless conn
+
+    heartbeats = {}
+    
+    begin
+      # Get all heartbeat keys (format: heartbeat:COMPONENT:TIMESTAMP)
+      keys = conn.keys('heartbeat:*')
+      keys.each do |key|
+        parts = key.split(':')
+        next unless parts.length >= 2
+        
+        component = parts[1]
+        heartbeat_data = RedisCache.redis_get(key)
+        
+        if heartbeat_data
+          timestamp = heartbeat_data['timestamp'] || heartbeat_data[:timestamp]
+          age = calculate_heartbeat_age(timestamp)
+          
+          heartbeats[component] = {
+            'last_seen' => timestamp,
+            'status' => heartbeat_data['status'] || heartbeat_data[:status] || 'active',
+            'metrics' => heartbeat_data['metrics'] || heartbeat_data[:metrics] || {},
+            'age_seconds' => age,
+            'alive' => age < HEARTBEAT_TIMEOUT
+          }
+        end
+      end
+
+      # Get worker heartbeats (format: worker:ID:heartbeat)
+      worker_keys = conn.keys('worker:*:heartbeat')
+      worker_keys.each do |key|
+        parts = key.split(':')
+        worker_id = parts[1]
+        worker_data = RedisCache.redis_get(key)
+        
+        if worker_data
+          timestamp = worker_data['timestamp'] || Time.now.utc.iso8601
+          age = calculate_heartbeat_age(timestamp)
+          
+          heartbeats["worker:#{worker_id}"] = {
+            'last_seen' => timestamp,
+            'status' => 'active',
+            'metrics' => worker_data,
+            'age_seconds' => age,
+            'alive' => age < HEARTBEAT_TIMEOUT
+          }
+        end
+      end
+
+    rescue => e
+      log_operation('heartbeat_scan', 'ERROR', "Failed to scan heartbeats: #{e.message}")
+    end
+
+    heartbeats
+  end
+
+  def calculate_heartbeat_age(timestamp_str)
+    return 999999 unless timestamp_str
+    
+    begin
+      timestamp = Time.parse(timestamp_str)
+      (Time.now - timestamp).to_i
+    rescue
+      999999
+    end
+  end
+
+  def scan_file_system
+    project_root = get_project_root
+    vec3_root = get_vec3_root
+    
+    # Key directories to watch
+    watch_patterns = [
+      File.join(project_root, '!1N.3OX*'),
+      File.join(project_root, '!WORKDESK*'),
+      File.join(project_root, '!0UT.3OX*'),
+      File.join(vec3_root, 'var', 'queue'),
+      File.join(vec3_root, 'var', 'receipts'),
+      File.join(vec3_root, 'var', 'state')
+    ]
+    
+    file_map = {}
+    
+    watch_patterns.each do |pattern|
+      Dir.glob(pattern).each do |path|
+        next unless File.directory?(path)
+        
+        scan_directory_recursive(path, file_map, project_root)
+      end
+    end
+    
+    file_map
+  end
+
+  def scan_directory_recursive(dir, file_map, root_prefix)
+    Dir.glob(File.join(dir, '**', '*')).each do |path|
+      next unless File.file?(path)
+      
+      begin
+        rel_path = path.start_with?(root_prefix) ? path[root_prefix.length..-1].sub(/^\//, '') : path
+        stat = File.stat(path)
+        
+        file_map[rel_path] = {
+          'path' => path,
+          'size' => stat.size,
+          'mtime' => stat.mtime.utc.iso8601,
+          'hash' => calculate_file_hash(path),
+          'location' => File.dirname(path)
+        }
+      rescue => e
+        # Skip files we can't access
+        next
+      end
+    end
+  end
+
+  def calculate_file_hash(path)
+    begin
+      content = File.read(path)
+      Digest::SHA256.hexdigest(content)[0..15]
+    rescue
+      '0000000000000000'
+    end
+  end
+
+  def detect_file_changes(current_files, previous_files)
+    changes = {
+      'new' => [],
+      'modified' => [],
+      'moved' => [],
+      'deleted' => []
+    }
+    
+    # Find new and modified files
+    current_files.each do |path, info|
+      prev_info = previous_files[path]
+      
+      if prev_info.nil?
+        changes['new'] << path
+      elsif info['hash'] != prev_info['hash'] || info['mtime'] != prev_info['mtime']
+        changes['modified'] << path
+      elsif info['location'] != prev_info['location']
+        changes['moved'] << { 'from' => prev_info['location'], 'to' => info['location'], 'path' => path }
+      end
+    end
+    
+    # Find deleted files
+    previous_files.each do |path, _|
+      changes['deleted'] << path unless current_files[path]
+    end
+    
+    changes
+  end
+
+  def update_unified_state(heartbeats, files, file_changes)
+    return unless RedisCache.redis_available?
+
+    # Build location index
+    location_map = {}
+    files.each do |path, info|
+      location = info['location']
+      location_map[location] ||= []
+      location_map[location] << {
+        'path' => path,
+        'size' => info['size'],
+        'mtime' => info['mtime'],
+        'hash' => info['hash']
+      }
+    end
+
+    state = {
+      'version' => '1.0.0',
+      'updated_at' => Time.now.utc.iso8601,
+      'sirius_time' => sirius_time(),
+      'watcher_id' => @worker_id,
+      'components' => {},
+      'files' => files,
+      'locations' => location_map,
+      'heartbeats' => heartbeats,
+      'file_changes' => file_changes,
+      'last_scan' => Time.now.utc.iso8601,
+      'stats' => {
+        'total_files' => files.length,
+        'active_components' => heartbeats.values.count { |h| h['alive'] },
+        'new_files' => file_changes['new'].length,
+        'modified_files' => file_changes['modified'].length,
+        'moved_files' => file_changes['moved'].length,
+        'deleted_files' => file_changes['deleted'].length
+      }
+    }
+    
+    # Build component states from heartbeats
+    heartbeats.each do |component, heartbeat|
+      state['components'][component] = {
+        'status' => heartbeat['status'],
+        'last_seen' => heartbeat['last_seen'],
+        'age_seconds' => heartbeat['age_seconds'],
+        'alive' => heartbeat['alive']
+      }
+    end
+    
+    # Store in Redis
+    RedisCache.redis_set(REDIS_STATE_KEY, state)
+    
+    # Also store individual file locations for fast lookup
+    files.each do |path, info|
+      RedisCache.redis_set("cmd.bridge:files:#{path}", info, 86400) # 24h TTL
+    end
+    
+    state
+  end
+
+  # ============================================================================
   # WORKER LIFECYCLE
   # ============================================================================
 
@@ -468,6 +720,7 @@ class BrainsWorker
     puts "▛▞// Queue: #{QUEUE_NAME}"
     puts "▛▞// Sirius time: #{sirius_time()}"
     puts "▛▞// Polling every #{POLL_INTERVAL}s..."
+    puts "▛▞// Unified Watch State: Active (monitoring heartbeats + files)"
 
     # Setup signal handlers
     trap('INT') { stop }
@@ -476,6 +729,8 @@ class BrainsWorker
     # Main processing loop
     while @running
       begin
+        now = Time.now
+        
         # Check for jobs
         job = fetch_job
         
@@ -488,6 +743,27 @@ class BrainsWorker
 
         # Send heartbeat
         send_heartbeat
+
+        # Scan component heartbeats (always)
+        heartbeats = scan_component_heartbeats
+
+        # Scan file system (periodic)
+        if (now - @last_file_scan) >= FILE_SCAN_INTERVAL
+          current_files = scan_file_system
+          file_changes = detect_file_changes(current_files, @file_index)
+          @file_index = current_files
+          @last_file_scan = now
+          
+          # Update unified state (periodic)
+          if (now - @last_state_update) >= STATE_UPDATE_INTERVAL
+            state = update_unified_state(heartbeats, current_files, file_changes)
+            @last_state_update = now
+            
+            # Log summary periodically
+            active_components = state['components'].values.count { |c| c['alive'] }
+            log_operation('unified_state', 'UPDATE', "#{active_components} components, #{current_files.length} files tracked")
+          end
+        end
 
       rescue => e
         log_operation('worker_error', 'ERROR', "Exception: #{e.message}")
@@ -510,6 +786,14 @@ class BrainsWorker
     # Clean up heartbeat
     if RedisCache.redis_available?
       RedisCache.redis_delete("worker:#{@worker_id}:heartbeat")
+      
+      # Update unified state to mark watcher as stopped
+      state = RedisCache.redis_get(REDIS_STATE_KEY)
+      if state && state['watcher_id'] == @worker_id
+        state['watcher_id'] = nil
+        state['stopped_at'] = Time.now.utc.iso8601
+        RedisCache.redis_set(REDIS_STATE_KEY, state)
+      end
     end
 
     puts "▛▞// Brains.exe stopped"

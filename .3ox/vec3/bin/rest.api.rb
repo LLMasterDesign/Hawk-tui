@@ -5,16 +5,26 @@
 #
 
 require 'sinatra'
-require 'sinatra/json'
 require 'json'
 require 'securerandom'
 require 'time'
 
 require_relative '../dev/ops/lib/helpers.rb'
 require_relative '../dev/ops/cache/redis.rb'
+require_relative '../bin/sirius.clock.rb'
 
 class CMDRestAPI < Sinatra::Base
   include Helpers
+
+  def self.load_capsule_info
+    {
+      version: '3.0.0',
+      name: 'CMD.BRIDGE',
+      description: 'Microkernel OS for AI agents',
+      sirius_time: '⧗-26.146',
+      capabilities: ['ask', 'serve', 'rest', 'telegram', 'shell']
+    }
+  end
 
   configure do
     set :bind, '127.0.0.1'
@@ -174,12 +184,14 @@ class CMDRestAPI < Sinatra::Base
       version: settings.capsule_info[:version]
     }
 
-    json health_data
+    content_type :json
+    JSON.generate(health_data)
   end
 
   # Version info endpoint (public)
   get '/version' do
-    json settings.capsule_info
+    content_type :json
+    JSON.generate(settings.capsule_info)
   end
 
   # Job discovery endpoint (protected)
@@ -314,7 +326,8 @@ class CMDRestAPI < Sinatra::Base
     end
 
     if job_status
-      json job_status
+      content_type :json
+      JSON.generate(job_status)
     else
       status 404
       json({ error: 'Job not found', job_id: job_id })
@@ -341,7 +354,8 @@ class CMDRestAPI < Sinatra::Base
     end
 
     if receipt
-      json receipt
+      content_type :json
+      JSON.generate(receipt)
     else
       status 404
       json({ error: 'Receipt not found', job_id: job_id })
