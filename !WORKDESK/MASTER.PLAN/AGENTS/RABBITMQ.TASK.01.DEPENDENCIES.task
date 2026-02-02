@@ -1,0 +1,70 @@
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂ ::[MxA3]::
+▛//▞▞ ⟦⎊⟧ :: ⧗-26.187 // RABBITMQ.TASK.01 :: DEPENDENCIES [z3] ▞▞
+▛▞// RABBITMQ.TASK.01 :: ρ{Setup}.φ{Install}.τ{Verify} ▹
+//▞⋮⋮ ⟦⚡⟧ :: [z3] [rabbitmq] [dependencies] [⊢ ⇨ ⟿ ▷]
+
+```
+Agent: ZENS3N.3ox [z3]
+Role: Executor
+Authority: MetaTron [m3]
+```
+
+════════════════════════════════════════════════════════════════════
+▛▞// ASSIGNMENT
+════════════════════════════════════════════════════════════════════
+
+**Primary:** Install RabbitMQ and Redis dependencies
+
+**Tasks:**
+1. Update `mix.exs` with RabbitMQ dependency (`{:amqp, "~> 3.0"}`)
+2. Update `mix.exs` with Redis dependency (`{:redix, "~> 1.0"}`)
+3. Create VPS installation script for RabbitMQ
+4. Create VPS installation script for Redis (if not already installed)
+5. Verify installations work
+
+**Return Location:** `/root/!LAUNCHPAD/!WORKDESK/MASTER.PLAN/RABBITMQ.RETURNS/TASK.01/`
+
+**Files to Return:**
+- `mix.exs` (updated)
+- `scripts/install_rabbitmq.sh`
+- `scripts/install_redis.sh`
+- `scripts/verify_dependencies.sh`
+
+:: ∎
+
+════════════════════════════════════════════════════════════════════
+▛▞// REQUIREMENTS
+════════════════════════════════════════════════════════════════════
+
+**mix.exs updates:**
+- Add `{:amqp, "~> 3.0"}` to deps
+- Add `{:redix, "~> 1.0"}` to deps
+- Run `mix deps.get` to verify
+
+**RabbitMQ installation:**
+- Install via apt-get
+- Enable and start service
+- Create default user if needed
+- Verify connection works
+
+**Redis installation:**
+- Check if already installed
+- Install if missing
+- Enable and start service
+- Verify connection works
+
+:: ∎
+
+════════════════════════════════════════════════════════════════════
+▛▞// SUCCESS CRITERIA
+════════════════════════════════════════════════════════════════════
+
+- [ ] mix.exs updated with dependencies
+- [ ] mix deps.get runs successfully
+- [ ] RabbitMQ service running
+- [ ] Redis service running
+- [ ] Both services accessible from Elixir
+
+:: ∎
+
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂〘・.°𝚫〙

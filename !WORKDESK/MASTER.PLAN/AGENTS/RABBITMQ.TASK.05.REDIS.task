@@ -1,0 +1,68 @@
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂ ::[MxA3]::
+▛//▞▞ ⟦⎊⟧ :: ⧗-26.187 // RABBITMQ.TASK.05 :: REDIS MEMORY [z3] ▞▞
+▛▞// RABBITMQ.TASK.05 :: ρ{Sync}.φ{Store}.τ{Retrieve} ▹
+//▞⋮⋮ ⟦⚡⟧ :: [z3] [redis] [memory] [sync] [⊢ ⇨ ⟿ ▷]
+
+```
+Agent: ZENS3N.3ox [z3]
+Role: Executor
+Authority: MetaTron [m3]
+```
+
+════════════════════════════════════════════════════════════════════
+▛▞// ASSIGNMENT
+════════════════════════════════════════════════════════════════════
+
+**Primary:** Create Redis memory sync module
+
+**Tasks:**
+1. Create `lib/services/agent_memory.ex` module
+2. Add functions to store messages in Redis
+3. Add functions to retrieve messages from Redis
+4. Update agents to sync inbox files to Redis
+5. Add periodic sync task
+
+**Return Location:** `/root/!LAUNCHPAD/!WORKDESK/MASTER.PLAN/RABBITMQ.RETURNS/TASK.05/`
+
+**Files to Return:**
+- `lib/services/agent_memory.ex` (new file)
+- Updated agent files with Redis sync calls
+
+**Dependencies:** Task 01 must be complete first
+
+:: ∎
+
+════════════════════════════════════════════════════════════════════
+▛▞// REQUIREMENTS
+════════════════════════════════════════════════════════════════════
+
+**Redis Key Format:**
+- `agent:{agent_name}:memory:{message_id}`
+- TTL: 7 days (604800 seconds)
+
+**Functions Needed:**
+- `store_message/3` - Store envelope in Redis
+- `get_message/2` - Retrieve message by ID
+- `get_recent_messages/2` - Get recent messages (limit 50)
+- `sync_inbox_to_redis/2` - Sync inbox files to Redis
+
+**Sync Process:**
+- Read inbox files
+- Store each in Redis with TTL
+- Run every 30 seconds per agent
+
+:: ∎
+
+════════════════════════════════════════════════════════════════════
+▛▞// SUCCESS CRITERIA
+════════════════════════════════════════════════════════════════════
+
+- [ ] AgentMemory module created
+- [ ] Messages stored in Redis
+- [ ] Messages retrievable by ID
+- [ ] Inbox files synced to Redis
+- [ ] TTL working correctly
+
+:: ∎
+
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂〘・.°𝚫〙

@@ -1,0 +1,68 @@
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂ ::[MxA3]::
+▛//▞▞ ⟦⎊⟧ :: ⧗-26.187 // RABBITMQ.TASK.03 :: METATRON CONSUMER [z3] ▞▞
+▛▞// RABBITMQ.TASK.03 :: ρ{Consume}.φ{Process}.τ{Acknowledge} ▹
+//▞⋮⋮ ⟦⚡⟧ :: [z3] [rabbitmq] [metatron] [consumer] [⊢ ⇨ ⟿ ▷]
+
+```
+Agent: ZENS3N.3ox [z3]
+Role: Executor
+Authority: MetaTron [m3]
+```
+
+════════════════════════════════════════════════════════════════════
+▛▞// ASSIGNMENT
+════════════════════════════════════════════════════════════════════
+
+**Primary:** Update MetaTron to consume from RabbitMQ
+
+**Tasks:**
+1. Add RabbitMQ consumer in `init/1`
+2. Subscribe to `agent.metatron` queue
+3. Handle `{:basic_deliver, payload, meta}` messages
+4. Process message and acknowledge
+5. Remove old inbox polling (keep for Redis sync only)
+
+**Return Location:** `/root/!LAUNCHPAD/!WORKDESK/MASTER.PLAN/RABBITMQ.RETURNS/TASK.03/`
+
+**Files to Return:**
+- `lib/agents/metatron.ex` (updated)
+
+**Dependencies:** Task 02 must be complete first
+
+:: ∎
+
+════════════════════════════════════════════════════════════════════
+▛▞// REQUIREMENTS
+════════════════════════════════════════════════════════════════════
+
+**Consumer Setup:**
+- Connect to RabbitMQ in `init/1`
+- Declare and bind to `agent.metatron` queue
+- Subscribe with `no_ack: false` (manual acknowledgment)
+
+**Message Handling:**
+- Decode envelope from payload
+- Process via existing `handle_cast({:message, envelope}, state)`
+- Acknowledge with `AMQP.Basic.ack/2` after success
+- Don't acknowledge on error (let it retry)
+
+**Inbox Polling:**
+- Keep `poll_inbox/1` but rename to `sync_inbox_to_redis/1`
+- Only syncs inbox files to Redis (doesn't process)
+- Run periodically for memory sync
+
+:: ∎
+
+════════════════════════════════════════════════════════════════════
+▛▞// SUCCESS CRITERIA
+════════════════════════════════════════════════════════════════════
+
+- [ ] MetaTron consumes from RabbitMQ queue
+- [ ] Messages processed correctly
+- [ ] Messages acknowledged after success
+- [ ] Failed messages stay in queue
+- [ ] Inbox sync still works for Redis
+
+:: ∎
+
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂〘・.°𝚫〙

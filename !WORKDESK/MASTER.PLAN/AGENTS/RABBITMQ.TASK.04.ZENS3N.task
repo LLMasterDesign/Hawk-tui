@@ -1,0 +1,57 @@
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂ ::[MxA3]::
+▛//▞▞ ⟦⎊⟧ :: ⧗-26.187 // RABBITMQ.TASK.04 :: ZENS3N CONSUMER [z3] ▞▞
+▛▞// RABBITMQ.TASK.04 :: ρ{Consume}.φ{Process}.τ{Acknowledge} ▹
+//▞⋮⋮ ⟦⚡⟧ :: [z3] [rabbitmq] [zens3n] [consumer] [⊢ ⇨ ⟿ ▷]
+
+```
+Agent: ZENS3N.3ox [z3]
+Role: Executor
+Authority: MetaTron [m3]
+```
+
+════════════════════════════════════════════════════════════════════
+▛▞// ASSIGNMENT
+════════════════════════════════════════════════════════════════════
+
+**Primary:** Update ZENS3N to consume from RabbitMQ
+
+**Tasks:**
+1. Add RabbitMQ consumer in `init/1`
+2. Subscribe to `agent.zens3n` queue
+3. Handle `{:basic_deliver, payload, meta}` messages
+4. Process message and acknowledge
+5. Remove old inbox polling (keep for Redis sync only)
+
+**Return Location:** `/root/!LAUNCHPAD/!WORKDESK/MASTER.PLAN/RABBITMQ.RETURNS/TASK.04/`
+
+**Files to Return:**
+- `lib/agents/zens3n.ex` (updated)
+
+**Dependencies:** Task 02 must be complete first
+
+:: ∎
+
+════════════════════════════════════════════════════════════════════
+▛▞// REQUIREMENTS
+════════════════════════════════════════════════════════════════════
+
+**Same as Task 03 but for ZENS3N:**
+- Connect to RabbitMQ
+- Consume from `agent.zens3n` queue
+- Process and acknowledge messages
+- Sync inbox to Redis for memory
+
+:: ∎
+
+════════════════════════════════════════════════════════════════════
+▛▞// SUCCESS CRITERIA
+════════════════════════════════════════════════════════════════════
+
+- [ ] ZENS3N consumes from RabbitMQ queue
+- [ ] Messages processed correctly
+- [ ] Messages acknowledged after success
+- [ ] Inbox sync still works for Redis
+
+:: ∎
+
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂〘・.°𝚫〙

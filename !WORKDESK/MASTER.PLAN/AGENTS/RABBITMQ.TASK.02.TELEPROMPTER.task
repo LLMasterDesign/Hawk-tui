@@ -1,0 +1,72 @@
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂ ::[MxA3]::
+▛//▞▞ ⟦⎊⟧ :: ⧗-26.187 // RABBITMQ.TASK.02 :: TELEPROMPTER [z3] ▞▞
+▛▞// RABBITMQ.TASK.02 :: ρ{Connect}.φ{Publish}.τ{Queue} ▹
+//▞⋮⋮ ⟦⚡⟧ :: [z3] [rabbitmq] [teleprompter] [⊢ ⇨ ⟿ ▷]
+
+```
+Agent: ZENS3N.3ox [z3]
+Role: Executor
+Authority: MetaTron [m3]
+```
+
+════════════════════════════════════════════════════════════════════
+▛▞// ASSIGNMENT
+════════════════════════════════════════════════════════════════════
+
+**Primary:** Update Teleprompter to publish to RabbitMQ
+
+**Tasks:**
+1. Add RabbitMQ connection in `init/1`
+2. Declare agent queues on startup
+3. Update `route_to_agent/7` to publish to RabbitMQ
+4. Keep inbox file writing for Redis memory sync
+5. Add error handling for RabbitMQ failures
+
+**Return Location:** `/root/!LAUNCHPAD/!WORKDESK/MASTER.PLAN/RABBITMQ.RETURNS/TASK.02/`
+
+**Files to Return:**
+- `lib/services/teleprompter/server.ex` (updated)
+
+**Dependencies:** Task 01 must be complete first
+
+:: ∎
+
+════════════════════════════════════════════════════════════════════
+▛▞// REQUIREMENTS
+════════════════════════════════════════════════════════════════════
+
+**Connection:**
+- Connect to RabbitMQ in `init/1`
+- Store connection and channel in state
+- Handle connection failures gracefully
+
+**Queue Management:**
+- Declare queues for each registered agent
+- Queue naming: `agent.{agent_name}` (lowercase)
+- Set `durable: true` for persistence
+
+**Message Publishing:**
+- Publish envelope to appropriate queue
+- Set `persistent: true`
+- Set `message_id` header for deduplication
+- Still write to inbox file (for Redis sync)
+
+**Error Handling:**
+- Fallback to file-based routing if RabbitMQ fails
+- Log errors but don't crash service
+
+:: ∎
+
+════════════════════════════════════════════════════════════════════
+▛▞// SUCCESS CRITERIA
+════════════════════════════════════════════════════════════════════
+
+- [ ] RabbitMQ connection established on startup
+- [ ] Queues declared for all agents
+- [ ] Messages published to correct queues
+- [ ] Inbox files still written
+- [ ] Service compiles without errors
+
+:: ∎
+
+///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂〘・.°𝚫〙
