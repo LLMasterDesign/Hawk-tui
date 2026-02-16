@@ -2,39 +2,40 @@
 
 Built for AI operators: an AWK-powered terminal UI with live gRPC health, daemon controls, adapter boundaries, and Rust-backed event streaming.
 
-> If your incident workflow is 14 tabs, 3 half-broken scripts, and one cursed `tail -f`, Hawk-tui is the cleanup crew.
-
 Part of the [ZENS3N Systems substrate hub](https://github.com/LLMasterDesign/ZENS3N).
 
-## Quick Links
+## ▛▞ 00. What This Repo Is
+
+Hawk-tui is an operator surface for AI-first operations.
+
+It splits responsibility on purpose:
+- Python TUI for control and visibility (`hawk_tui.py`)
+- AWK command layer for fast behavior changes (`awk/commands`, `bin/hawk-cmd`)
+- Rust event spine/mirror for durable stream handling (`hawkd`, `hawk`, `hawk_core`)
+- Shell adapters for external systems (`adapters`)
+
+HawkFrame stream contract is always 7 TSV columns:
+`ts kind scope id level msg kv`
+
+:: ∎
+
+## ▛▞ 01. Quick Links
+
+Use these first when onboarding or extending.
 
 - 📚 Docs Index: [docs/INDEX.md](docs/INDEX.md)
 - 👋 Onboarding: [docs/ONBOARDING.md](docs/ONBOARDING.md)
 - 📐 Specs: [docs/SPECS.md](docs/SPECS.md)
-- 🧵 AWK Book: [docs/HAWK.AWK.BOOK.md](docs/HAWK.AWK.BOOK.md)
-- 🔧 AWK Command Book: [docs/awk_command_book.md](docs/awk_command_book.md)
-- 🔒 gRPC TLS/mTLS: [docs/hawkd_tls_mtls.md](docs/hawkd_tls_mtls.md)
+- 🧵 Hawk AWK Book: [docs/HAWK.AWK.BOOK.md](docs/HAWK.AWK.BOOK.md)
+- 🔧 Hawk AWK Command Book: [docs/awk_command_book.md](docs/awk_command_book.md)
+- 📖 GNU awk Manual: [gawk manual](https://www.gnu.org/software/gawk/manual/)
+- 🔒 gRPC TLS/mTLS reference: [docs/hawkd_tls_mtls.md](docs/hawkd_tls_mtls.md)
 
-## Why Hawk-tui
+:: ∎
 
-Most operator dashboards degrade when agent-driven changes happen fast.
-Hawk-tui avoids that by keeping hard boundaries:
+## ▛▞ Architecture
 
-- UI is a mirror, not the source of truth.
-- Command logic lives in AWK scripts and adapters.
-- Event plumbing lives in Rust (`hawkd`, `hawk_core`, `hawk`).
-- New behavior lands in small files, not full UI rewrites.
-
-## What You Get
-
-- Python operator dashboard (`hawk_tui.py`) with keyboard-first control.
-- Command palette driven by `bin/hawk-cmd` and `awk/commands`.
-- Live gRPC health normalization and daemon controls.
-- Deterministic fake environment for safe iteration.
-- Rust spine (`hawkd`) and mirror (`hawk`) for ingest/broadcast.
-- Pack/thread model for reusable AWK transforms.
-
-## Architecture
+This diagram shows how ingestion, spine, UI, and command logic are separated.
 
 ```text
 publishers/stdin/unix ingest
@@ -52,60 +53,115 @@ publishers/stdin/unix ingest
       awk commands / packs / adapters
 ```
 
-Core stream contract is HawkFrame TSV with exactly 7 columns:
-`ts kind scope id level msg kv`
+:: ∎
 
-## Quick Start
+## ▛▞ Fast Answers
 
-Requirements:
-- `bash`
-- `python3`
-- `awk`
+Is this designed for AI operators first?
+- Yes.
 
-Recommended:
-- `cargo`, `rustc`, `rustup`
-- `tmux`
+Can OpenClaw use this?
+- Yes. Hawk-tui is intended for agent frameworks like OpenClaw that need to build and run terminal interfaces for users.
 
-Optional:
-- `grpcurl` for real gRPC probes
-- `gum` for startup polish
+:: ∎
 
-Run fake environment:
+## ▛▞ 02. Quick Start (Bun Host First)
+
+If your host stack is Bun (recommended for your setup), start here.
+
+This block clones the repo and installs Bun wrapper dependencies.
 
 ```bash
-cd /mnt/v/!CENTRAL.CMD/!LAUNCHPAD/Hawk-tui
+git clone https://github.com/LLMasterDesign/Hawk-tui.git
+cd Hawk-tui/bun
+bun install
+```
+
+This block starts the Rust spine (`hawkd`) from Bun.
+
+```bash
+HAWKD_BIN=hawkd \
+HAWK_SOCKET_PATH=/tmp/hawk.sock \
+HAWKD_SOURCE=none \
+HAWK_WATCHES="127.0.0.1:50051,,local.grpc" \
+bun run spine
+```
+
+This block starts the UI client (`hawk`) from Bun in a second terminal.
+
+```bash
+cd Hawk-tui/bun
+HAWK_BIN=hawk \
+HAWK_SOCKET_PATH=/tmp/hawk.sock \
+bun run ui
+```
+
+If you are not using Bun, this block runs the direct CLI path.
+
+```bash
+cd Hawk-tui
+./bin/hawk-cmd list
+python3 hawk_tui.py --check
+./run.sh
+```
+
+Notes:
+- If `grpcurl` is not installed, gRPC status falls back to `UNKNOWN` instead of crashing.
+- `HAWK_DAEMON_UNIT` controls which daemon `a/z/e/h/u` actions target.
+
+:: ∎
+
+## ▛▞ 03. Fake Mode (Secondary Path for Safe Demos)
+
+This block is for deterministic demo/testing when real services are unavailable.
+Use this second, not as your primary production path.
+
+```bash
 ./shell/run_fake.sh
 ```
 
-Verify:
+This block runs non-interactive smoke checks and prints a JSON summary.
 
 ```bash
 ./shell/verify.sh
-```
-
-One-shot JSON health check:
-
-```bash
 python3 hawk_tui.py --check
 ```
 
-Expected shape:
+:: ∎
 
-```json
-{
-  "app": "hawk-tui",
-  "commands": 4,
-  "grpc_ok": 3,
-  "grpc_bad": 0,
-  "stream_rows": 3,
-  "log_size": 12345,
-  "log_delta": 321
-}
+## ▛▞ 04. Daemon Control: Exactly Which Service Gets Called
+
+These keys call `adapters/daemon_ctl.sh` with the unit set by `HAWK_DAEMON_UNIT`.
+Default unit is `hawk-agent.service` if you do not override it.
+
+- `a` -> `start`
+- `z` -> `stop`
+- `e` -> `restart`
+- `h` -> `health` (`systemctl status`)
+- `u` -> `status` (`systemctl status`)
+
+This block shows direct shell calls equivalent to TUI keypresses.
+
+```bash
+export HAWK_DAEMON_UNIT="hawk-agent.service"
+./adapters/daemon_ctl.sh health "$HAWK_DAEMON_UNIT"
+./adapters/daemon_ctl.sh restart "$HAWK_DAEMON_UNIT"
 ```
 
-## Command Surface Examples
+This block shows status checks for a unit list used by `daemon_status` command.
 
-List command catalog:
+```bash
+./adapters/systemd_status.sh conf/systemd_units.txt
+```
+
+:: ∎
+
+## ▛▞ 05. Command Surface (What Actually Runs)
+
+Each command is discoverable and executable through `bin/hawk-cmd`.
+The examples below show real command shapes and outputs.
+
+This block lists the command registry.
 
 ```bash
 ./bin/hawk-cmd list
@@ -120,177 +176,118 @@ tail_errors|Tail Errors|awk|Count ERROR/WARN/INFO in recent log lines
 daemon_status|Daemon Status|adapter|Inspect systemd active state for unit list
 ```
 
-Run gRPC health against fixtures:
+This block runs gRPC health using explicit target and fake files.
 
 ```bash
-HAWK_GRPC_FAKE_FILE="$(pwd)/shell/fake_env/grpc_health.jsonl" \
 HAWK_GRPC_TARGETS="$(pwd)/shell/fake_env/grpc.targets" \
+HAWK_GRPC_FAKE_FILE="$(pwd)/shell/fake_env/grpc_health.jsonl" \
 ./bin/hawk-cmd run grpc_health
 ```
 
-Example output:
-
-```text
-127.0.0.1:50051	SERVING	36ms	fake
-127.0.0.1:50052	SERVING	34ms	fake
-127.0.0.1:50053	SERVING	35ms	fake
-```
-
-Run stream lag:
+This block runs stream lag summary.
 
 ```bash
 HAWK_STREAM_FILE="$(pwd)/shell/fake_env/stream.events" \
 ./bin/hawk-cmd run stream_lag
 ```
 
-Example output:
-
-```text
-orders	lag=0s	events=5822	last_epoch=1771260977
-health	lag=1s	events=5822	last_epoch=1771260976
-agent	lag=0s	events=5822	last_epoch=1771260977
-```
-
-Run log severity summary:
+This block runs log severity tail summary.
 
 ```bash
 HAWK_LOG_FILE="$(pwd)/shell/fake_env/runtime.log" \
 ./bin/hawk-cmd run tail_errors
 ```
 
-Example output:
+:: ∎
+
+## ▛▞ 06. Nav Model (Current + Extendable Path)
+
+Current implementation has 4 top-level pages mapped to numeric keys `1..4`.
+To extend beyond this, update the nav definitions and page dispatcher.
+
+Files you edit for nav extension:
+- `hawk_tui.py` -> `NAV_ITEMS`
+- `hawk_tui.py` -> `draw_left_nav` (`nav_cards`)
+- `hawk_tui.py` -> `draw_main` page switch branches
+
+This block shows the current conceptual nav tree.
 
 ```text
-ERROR	34
-WARN	66
-INFO	200
+overview
+grpc
+streams
+commands
 ```
 
-## Python TUI Controls
+This block shows a recommended nested model for future extension.
 
-- `1..4`: switch pages
-- `j/k` or arrows: navigate
-- `[` and `]`: select command
-- `Enter`: run selected command
-- `a`: daemon start
-- `z`: daemon stop
-- `e`: daemon restart
-- `h`: daemon health
-- `u`: daemon status
-- `m`: append note
-- `r`: refresh now
-- `q`: quit
-
-## Run Against Real Systems
-
-```bash
-export HAWK_GRPC_TARGETS="$(pwd)/conf/3ox.grpc.targets"
-export HAWK_UNITS_FILE="$(pwd)/conf/systemd_units.txt"
-./run.sh
+```text
+overview
+  runtime
+  incidents
+grpc
+  health
+  endpoints
+streams
+  lag
+  throughput
+commands
+  catalog
+  output
 ```
 
-Common overrides:
+Important: nested nav is a design target; current code ships with flat 4-page nav.
 
-```bash
-export HAWK_LOG_FILE="/var/log/hawk/runtime.log"
-export HAWK_STREAM_FILE="/var/lib/hawk/stream.events"
-export HAWK_DAEMON_UNIT="hawk-agent.service"
-```
+:: ∎
 
-## Rust Track: Spine + Mirror
+## ▛▞ 07. Rust Spine + Mirror Examples
 
-List pack threads:
+These commands show the Rust path for ingest, broadcast, and transform.
+
+This block lists available pack threads.
 
 ```bash
 cargo run -p hawk -- pack list
 ```
 
-Show thread schema:
+This block inspects one thread schema.
 
 ```bash
 cargo run -p hawk -- pack show fail_only
 ```
 
-Run pack doctor:
+This block validates packs and AWK safety checks.
 
 ```bash
 cargo run -p hawk -- pack-doctor --smoke true --security strict
 ```
 
-Run mirror from stdin:
-
-```bash
-cargo run -p hawk -- --source stdin
-```
-
-Feed one frame manually:
-
-```bash
-printf '2026-02-16T12:00:00Z\tHEALTH\tgrpc\tproto.alpha\tok\talive\tstatus=SERVING;latency_ms=12\n' \
-  | cargo run -p hawk -- --source stdin
-```
-
-Run mirror from unix socket:
-
-```bash
-cargo run -p hawk -- --source unix --socket-path /tmp/hawk.sock
-```
-
-Run spine (`hawkd`) and broadcast:
+This block runs `hawkd` as socket spine reading stdin.
 
 ```bash
 cargo run -p hawkd -- --socket-path /tmp/hawk.sock --source stdin
 ```
 
-Pipe events into spine:
+This block runs `hawk` mirror consuming the socket stream.
 
 ```bash
-printf '2026-02-16T12:00:01Z\tHEALTH\tsystemd\thawk-agent.service\twarn\tdegraded\tstate=activating\n' \
+cargo run -p hawk -- --source unix --socket-path /tmp/hawk.sock
+```
+
+This block injects one frame into the pipeline.
+
+```bash
+printf '2026-02-16T12:00:00Z\tHEALTH\tsystemd\thawk-agent.service\tok\talive\tstate=active\n' \
   | cargo run -p hawkd -- --socket-path /tmp/hawk.sock --source stdin
 ```
 
-## Transform Examples (AWK Threads)
+:: ∎
 
-Use built-in thread transform:
+## ▛▞ 08. Add a New AWK Command (Full Walkthrough)
 
-```bash
-printf '2026-02-16T12:00:02Z\tHEALTH\tgrpc\talpha\tfail\tdown\treason=timeout\n' \
-  | cargo run -p hawk -- --source stdin --transform thread:fail_only
-```
+This section shows the minimum edits required to add a new command end-to-end.
 
-Pass thread vars:
-
-```bash
-printf '2026-02-16T12:00:03Z\tHEALTH\tsystemd\thawk-agent.service\twarn\tslow\tlatency_ms=950\n' \
-  | cargo run -p hawk -- --source stdin --transform thread:fail_only --tvar scope=systemd
-```
-
-Use a direct AWK file transform:
-
-```bash
-printf '2026-02-16T12:00:04Z\tHEALTH\tsystemd\thawk-agent.service\tfail\tdown\tstate=inactive\n' \
-  | cargo run -p hawk -- --source stdin --transform file:./packs/hawk.core/fail_only.awk
-```
-
-## gRPC mTLS Example (`hawkd`)
-
-```bash
-cargo run -p hawkd -- \
-  --socket-path /tmp/hawk.sock \
-  --source none \
-  --watch service.example.internal:8443,,proto.alpha \
-  --grpc-tls-mode mtls \
-  --grpc-ca /etc/3ox/certs/ca.pem \
-  --grpc-cert /etc/3ox/certs/client.pem \
-  --grpc-key /etc/3ox/certs/client.key \
-  --grpc-domain service.example.internal
-```
-
-Reference: [docs/hawkd_tls_mtls.md](docs/hawkd_tls_mtls.md)
-
-## Add a New Command (End-to-End)
-
-### 1. Create the AWK command
+This block creates the AWK file.
 
 ```bash
 cat > awk/commands/warn_only.awk <<'AWK'
@@ -299,17 +296,13 @@ BEGIN { FS="\t"; OFS="\t" }
 AWK
 ```
 
-### 2. Register it in the catalog
-
-Edit `awk/commands/cmd_catalog.awk` and add:
+This block adds command metadata to catalog.
 
 ```awk
 print "warn_only|Warn Only|awk|Show warn-level lines only"
 ```
 
-### 3. Wire dispatch in `bin/hawk-cmd`
-
-Add a new case:
+This block adds dispatch logic to `bin/hawk-cmd`.
 
 ```bash
 warn_only)
@@ -321,7 +314,7 @@ warn_only)
   ;;
 ```
 
-### 4. Validate and run
+This block validates your new command.
 
 ```bash
 ./bin/hawk-cmd list | rg warn_only
@@ -329,62 +322,78 @@ warn_only)
 ./shell/verify.sh
 ```
 
-The command will appear in the TUI palette automatically.
+:: ∎
 
-## AWK Toolkit Links
+## ▛▞ 09. Visual Capture (When You Can Run It)
 
-- Hawk AWK rules and templates: [docs/HAWK.AWK.BOOK.md](docs/HAWK.AWK.BOOK.md)
-- Hawk command patterns: [docs/awk_command_book.md](docs/awk_command_book.md)
-- GNU awk reference: [gawk manual](https://www.gnu.org/software/gawk/manual/)
+Use this after launch to produce proof images and clips for docs/releases.
 
-## Troubleshooting
+This block captures a static screenshot from your terminal app.
 
-No commands in UI:
-- Check `./bin/hawk-cmd list`
-- Validate `awk/commands/cmd_catalog.awk`
-- Ensure `bin/hawk-cmd` is executable
+```text
+1) Launch: ./run.sh
+2) Drive to the view you want (gRPC, Streams, Commands)
+3) Take terminal screenshot and save as docs/assets/hawk-tui-main.png
+```
 
-gRPC is unknown everywhere:
-- Verify `HAWK_GRPC_TARGETS`
-- Validate `grpcurl` and cert paths in real mode
-- Re-test using fixture mode to isolate transport issues
+This block records a short terminal session (if `asciinema` is installed).
 
-No log movement:
-- Validate `HAWK_LOG_FILE`
-- Ensure logs are being written
-- Run `./shell/run_fake.sh` to confirm baseline behavior
+```bash
+asciinema rec docs/assets/hawk-tui-demo.cast
+```
 
-Rust toolchain errors (`rustup`/`cargo`):
-- Check `rustup show active-toolchain`
-- Set a default: `rustup default stable`
+Then render a shareable GIF/MP4 with your preferred renderer.
 
-## Repo Layout
+If you want, once you run it, I can help you script a repeatable capture pipeline.
 
-- `hawk_tui.py`: Python 5-box operator UI
-- `bin/hawk-cmd`: command registry/runner
-- `awk/commands`: AWK command scripts
-- `adapters`: system integration scripts
-- `packs/hawk.core`: packaged AWK threads + schema
-- `crates/hawk_core`: HawkFrame model/parsing
-- `crates/hawkd`: socket spine + watchers
-- `crates/hawk`: mirror TUI + transforms + doctor
-- `shell`: fake env + smoke tests
-- `docs`: onboarding, specs, AWK docs, deep dive
+:: ∎
 
-## FAQ
+## ▛▞ 10. Troubleshooting
 
-Do I need Elixir/BEAM to run Hawk-tui?
-- No. Core runtime here is Python + AWK + Rust + shell adapters.
+This block helps diagnose common startup/operation issues quickly.
 
-Can I run only the Python track?
-- Yes. Use `./run.sh` or `./shell/run_fake.sh`.
+- No commands visible:
+  - `./bin/hawk-cmd list`
+  - check `awk/commands/cmd_catalog.awk` syntax
+- Daemon controls do nothing:
+  - verify `HAWK_DAEMON_UNIT`
+  - run `./adapters/daemon_ctl.sh health <unit>` manually
+- gRPC all unknown:
+  - validate `HAWK_GRPC_TARGETS`
+  - install/configure `grpcurl` if using live probes
+- Rust toolchain errors:
+  - `rustup show active-toolchain`
+  - `rustup default stable`
 
-Can I run only the Rust track?
-- Yes. Use `hawkd` and `hawk` cargo commands directly.
+:: ∎
 
-Is this designed for AI operators first?
-- Yes.
+## ▛▞ 11. Bun Service Wrapper
 
-## License
+Use this when your host project is Bun-based and you want `hawkd`/`hawk` managed as service processes.
+
+This block runs the Bun wrapper for `hawkd` (spine mode).
+
+```bash
+cd bun
+bun install
+HAWKD_BIN=hawkd HAWK_SOCKET_PATH=/tmp/hawk.sock HAWKD_SOURCE=none bun run spine
+```
+
+This block runs the Bun wrapper for `hawk` (UI mode).
+
+```bash
+cd bun
+HAWK_BIN=hawk HAWK_SOCKET_PATH=/tmp/hawk.sock bun run ui
+```
+
+For env-driven project shim defaults, use:
+- `shims/project.sh`
+- `conf/project.grpc.targets`
+
+:: ∎
+
+## ▛▞ 12. License
 
 MIT. See [LICENSE](LICENSE).
+
+:: ∎
