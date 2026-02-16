@@ -1,0 +1,47 @@
+# ▛▞// hawkd systemd unit :: hawkd.systemd
+# @ctx ⫸ [user.isolation.fs]
+[Unit]
+Description=hawkd unix socket spine
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=3ox-service
+Group=3ox-service
+NoNewPrivileges=true
+
+RuntimeDirectory=hawk
+RuntimeDirectoryMode=0750
+Environment=HAWK_SOCK=/run/hawk/hawk.sock
+
+ExecStart=/usr/local/bin/hawkd \
+  --socket-path /run/hawk/hawk.sock \
+  --source none \
+  --watch service:8443,,proto.alpha \
+  --grpc-tls-mode mtls \
+  --grpc-ca /etc/3ox/certs/ca.pem \
+  --grpc-cert /etc/3ox/certs/client.pem \
+  --grpc-key /etc/3ox/certs/client.key \
+  --grpc-domain service
+
+Restart=always
+RestartSec=2
+UMask=0077
+
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/run/hawk
+ReadOnlyPaths=/etc/3ox/certs
+LockPersonality=true
+MemoryDenyWriteExecute=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target
+# :: ∎

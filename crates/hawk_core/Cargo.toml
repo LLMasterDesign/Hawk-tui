@@ -1,0 +1,10 @@
+# ▛▞// hawk_core crate :: hawk.core.toml
+# @ctx ⫸ [frame.severity.parse]
+[package]
+name = "hawk_core"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+time = { version = "0.3", features = ["parsing", "formatting"] }
+# :: ∎

@@ -1,0 +1,10 @@
+# ▛▞// hawk-tui workspace :: hawk.workspace
+# @ctx ⫸ [workspace.members.hawkd]
+[workspace]
+resolver = "2"
+members = [
+  "crates/hawk_core",
+  "crates/hawk",
+  "crates/hawkd",
+]
+# :: ∎

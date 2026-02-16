@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Rust
+/target/
+
+# Runtime artifacts
+agent_chat.log
+erl_crash.dump
+/tmp/hawk.sock
+/tmp/hawk-ingest.sock
+
+# Fake env generated files
+shell/fake_env/runtime.log
+shell/fake_env/stream.events
+shell/fake_env/grpc_health.jsonl
+
+# Editor/system
+.DS_Store
+*.swp
+*.swo

@@ -1,0 +1,20 @@
+# ▛▞// hawkd daemon :: hawkd.toml
+# @ctx ⫸ [grpc.watch.mtls]
+[package]
+name = "hawkd"
+version = "0.4.0"
+edition = "2021"
+
+[dependencies]
+hawk_core = { path = "../hawk_core" }
+
+clap = { version = "4.5", features = ["derive"] }
+anyhow = "1.0"
+time = { version = "0.3", features = ["formatting"] }
+
+tokio = { version = "1.0", features = ["rt-multi-thread", "macros", "time"] }
+tokio-stream = "0.1"
+tonic = { version = "0.14", features = ["transport"] }
+tonic-health = "0.14"
+zbus = { version = "4", default-features = false, features = ["tokio"] }
+# :: ∎

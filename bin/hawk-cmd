@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+AWK_DIR="$BASE_DIR/awk"
+CMD_DIR="$AWK_DIR/commands"
+ADAPTER_DIR="$BASE_DIR/adapters"
+
+LOG_FILE="${HAWK_LOG_FILE:-$BASE_DIR/shell/fake_env/runtime.log}"
+STREAM_FILE="${HAWK_STREAM_FILE:-$BASE_DIR/shell/fake_env/stream.events}"
+TARGETS_FILE="${HAWK_GRPC_TARGETS:-$BASE_DIR/shell/fake_env/grpc.targets}"
+FAKE_GRPC_FILE="${HAWK_GRPC_FAKE_FILE:-$BASE_DIR/shell/fake_env/grpc_health.jsonl}"
+UNITS_FILE="${HAWK_UNITS_FILE:-$BASE_DIR/conf/systemd_units.txt}"
+
+usage() {
+  cat <<EOF
+hawk-cmd usage:
+  hawk-cmd list
+  hawk-cmd run <command_id>
+EOF
+}
+
+cmd_list() {
+  awk -f "$CMD_DIR/cmd_catalog.awk"
+}
+
+cmd_run() {
+  local id="${1:-}"
+  case "$id" in
+    grpc_health)
+      "$ADAPTER_DIR/grpc_health.sh" "$TARGETS_FILE" "$FAKE_GRPC_FILE" | awk -f "$CMD_DIR/grpc_health.awk"
+      ;;
+    stream_lag)
+      if [[ -f "$STREAM_FILE" ]]; then
+        awk -f "$CMD_DIR/stream_lag.awk" "$STREAM_FILE"
+      else
+        echo "stream\tlag=n/a\tevents=0\tlast_epoch=0"
+      fi
+      ;;
+    tail_errors)
+      if [[ -f "$LOG_FILE" ]]; then
+        tail -n "${HAWK_TAIL_LINES:-300}" "$LOG_FILE" | awk -f "$CMD_DIR/tail_errors.awk"
+      else
+        echo "ERROR\t0"
+        echo "WARN\t0"
+        echo "INFO\t0"
+      fi
+      ;;
+    daemon_status)
+      "$ADAPTER_DIR/systemd_status.sh" "$UNITS_FILE"
+      ;;
+    *)
+      echo "unknown command id: $id" >&2
+      return 2
+      ;;
+  esac
+}
+
+main() {
+  local sub="${1:-}"
+  case "$sub" in
+    list)
+      cmd_list
+      ;;
+    run)
+      shift
+      cmd_run "${1:-}"
+      ;;
+    *)
+      usage
+      return 1
+      ;;
+  esac
+}
+
+main "$@"

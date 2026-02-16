@@ -1,0 +1,4 @@
+# Default units for daemon_status command
+hawk-agent.service
+hawk-supervisor.service
+hawk-stream.service

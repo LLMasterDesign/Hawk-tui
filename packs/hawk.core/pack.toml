@@ -1,0 +1,58 @@
+# ▛▞// pack :: hawk.pack
+# @ctx ⫸ [pack.meta.v0]
+[pack]
+id = "hawk.core"
+name = "Hawk Core Pack"
+version = "0.1.0"
+author = "Lucius.Larz"
+license = "MIT"
+description = "Baseline awk threads for HawkFrame TSV streams."
+# :: ∎
+
+# ▛▞// thread :: hawk.thread.fail_only
+# @ctx ⫸ [thread.filter.fail]
+[[thread]]
+id = "fail_only"
+title = "Fail Only"
+kind = "filter"
+file = "fail_only.awk"
+description = "Pass only fail and warn frames. Optional scope filter."
+
+[[thread.arg]]
+name = "scope"
+type = "string"
+default = ""
+help = "If set, only pass frames where $3 (scope) equals this value."
+# :: ∎
+
+# ▛▞// thread :: hawk.thread.scope_counts
+# @ctx ⫸ [thread.aggregate.count]
+[[thread]]
+id = "scope_counts"
+title = "Scope Counts"
+kind = "aggregate"
+file = "scope_counts.awk"
+description = "Aggregate counts by scope and level. Emits synthetic frames."
+
+[[thread.arg]]
+name = "window_s"
+type = "int"
+default = 10
+help = "Emit a summary every N seconds. Uses local wall time in awk."
+# :: ∎
+
+# ▛▞// thread :: hawk.thread.systemd_focus
+# ⫸ [thread.filter.systemd]
+[[thread]]
+id = "systemd_focus"
+title = "systemd Focus"
+kind = "filter"
+file = "systemd_focus.awk"
+description = "Pass only systemd scope frames. Optional unit id prefix."
+
+[[thread.arg]]
+name = "id_prefix"
+type = "string"
+default = ""
+help = "If set, only pass frames where $4 (id) starts with this prefix."
+# :: ∎
