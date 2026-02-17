@@ -1,0 +1,2 @@
+# Copy to grpc.targets and fill with your gRPC endpoints (host:port per line)
+127.0.0.1:50051

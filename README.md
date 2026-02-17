@@ -73,7 +73,7 @@ Optional:
 Run fake environment:
 
 ```bash
-cd /mnt/v/!CENTRAL.CMD/!LAUNCHPAD/Hawk-tui
+cd /path/to/Hawk-tui
 ./shell/run_fake.sh
 ```
 
@@ -184,7 +184,7 @@ INFO	200
 ## Run Against Real Systems
 
 ```bash
-export HAWK_GRPC_TARGETS="$(pwd)/conf/3ox.grpc.targets"
+export HAWK_GRPC_TARGETS="$(pwd)/conf/grpc.targets.example"
 export HAWK_UNITS_FILE="$(pwd)/conf/systemd_units.txt"
 ./run.sh
 ```
@@ -280,9 +280,9 @@ cargo run -p hawkd -- \
   --source none \
   --watch service.example.internal:8443,,proto.alpha \
   --grpc-tls-mode mtls \
-  --grpc-ca /etc/3ox/certs/ca.pem \
-  --grpc-cert /etc/3ox/certs/client.pem \
-  --grpc-key /etc/3ox/certs/client.key \
+  --grpc-ca /etc/hawk/certs/ca.pem \
+  --grpc-cert /etc/hawk/certs/client.pem \
+  --grpc-key /etc/hawk/certs/client.key \
   --grpc-domain service.example.internal
 ```
 

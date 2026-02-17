@@ -8,7 +8,7 @@ cargo run -p hawkd -- \
   --source none \
   --watch service:8443,,proto.alpha \
   --grpc-tls-mode tls \
-  --grpc-ca /etc/3ox/certs/ca.pem \
+  --grpc-ca /etc/hawk/certs/ca.pem \
   --grpc-domain service
 ```
 
@@ -19,9 +19,9 @@ cargo run -p hawkd -- \
   --source none \
   --watch service:8443,,proto.alpha \
   --grpc-tls-mode mtls \
-  --grpc-ca /etc/3ox/certs/ca.pem \
-  --grpc-cert /etc/3ox/certs/client.pem \
-  --grpc-key /etc/3ox/certs/client.key \
+  --grpc-ca /etc/hawk/certs/ca.pem \
+  --grpc-cert /etc/hawk/certs/client.pem \
+  --grpc-key /etc/hawk/certs/client.key \
   --grpc-domain service
 ```
 
