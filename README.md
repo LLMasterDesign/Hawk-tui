@@ -4,7 +4,15 @@ Built for AI operators: an AWK-powered terminal UI with live gRPC health, daemon
 
 > If your incident workflow is 14 tabs, 3 half-broken scripts, and one cursed `tail -f`, Hawk-tui is the cleanup crew.
 
-Part of the [ZENS3N Systems substrate hub](https://github.com/LLMasterDesign/ZENS3N).
+Part of the ZENS3N Systems substrate hub.
+
+## TUI2GO — substrate of Hawk
+
+TUI2GO is the 2GO control surface for Hawk: **TRACT** (validate+snapshot) and **FORGE** (loop+restart) panels, mobile-layout themes, and a unified watch pipeline.
+
+![TUI2GO 2GO control panels — TRACT and FORGE](tui2go/tui2go-2go-panels.png)
+
+→ Full docs: [tui2go/README.md](tui2go/README.md)
 
 ## Quick Links
 
