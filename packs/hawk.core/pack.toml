@@ -4,7 +4,7 @@
 id = "hawk.core"
 name = "Hawk Core Pack"
 version = "0.1.0"
-author = "Lucius.Larz"
+author = "ZENS3N Systems"
 license = "MIT"
 description = "Baseline awk threads for HawkFrame TSV streams."
 # :: ∎
