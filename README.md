@@ -4,7 +4,7 @@ Built for AI operators: an AWK-powered terminal UI with live gRPC health, daemon
 
 > If your incident workflow is 14 tabs, 3 half-broken scripts, and one cursed `tail -f`, Hawk-tui is the cleanup crew.
 
-Part of the ZENS3N Systems substrate hub.
+Part of the [ZENS3N Systems](https://github.com/LLMasterDesign/ZENS3N) substrate hub.
 
 ## TUI2GO — substrate of Hawk
 
