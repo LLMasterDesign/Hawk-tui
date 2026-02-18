@@ -6,5 +6,6 @@
 - [ ] Audit for personal info or machine-specific references
 - [ ] Ensure examples/scripts run on other folks' PCs
 - [ ] Lint / CI if not present
+- [ ] Quote style audit: most `""` in shell are required for variable expansion; only a few pure `echo` literals could use `''` (cosmetic only; AWK/Rust use `""` by language rule)
 
 :: ∎
