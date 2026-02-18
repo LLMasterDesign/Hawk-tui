@@ -10,16 +10,33 @@ export LANG="${LANG:-en_US.UTF-8}"
 export LC_ALL="${LC_ALL:-en_US.UTF-8}"
 
 # Check if terminal supports UTF-8, use ASCII fallback if not
+USE_ASCII_BOXES=0
 if command -v locale >/dev/null 2>&1; then
   if [[ "$(locale charmap 2>/dev/null)" != "UTF-8" ]]; then
-    export USE_ASCII_BOXES=1
+    USE_ASCII_BOXES=1
   fi
 else
   # If locale command not available, try to detect
   if [[ -z "${LANG:-}" ]] || [[ "$LANG" != *"UTF-8"* ]] && [[ "$LANG" != *"utf8"* ]]; then
-    export USE_ASCII_BOXES=1
+    USE_ASCII_BOXES=1
   fi
 fi
+
+# Test if terminal can actually render Unicode box characters
+# Even if UTF-8 is reported, the font might not support the characters
+if [[ "$USE_ASCII_BOXES" == "0" ]]; then
+  # Try to render a test box character and check if it's garbled
+  test_output="$(printf '┌' 2>&1)"
+  # If output contains replacement character or is empty, use ASCII
+  if [[ -z "$test_output" ]] || [[ "$test_output" == *""* ]] || [[ "$test_output" == *"?"* ]]; then
+    USE_ASCII_BOXES=1
+  fi
+  # Also check terminal type - some terminals report UTF-8 but can't render
+  if [[ -n "${TERM:-}" ]] && [[ "$TERM" == "dumb" ]] || [[ "$TERM" == *"ansi"* ]]; then
+    USE_ASCII_BOXES=1
+  fi
+fi
+export USE_ASCII_BOXES
 
 SELF_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd -- "$SELF_DIR" && pwd)"
