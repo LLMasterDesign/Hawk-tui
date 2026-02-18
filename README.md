@@ -6,15 +6,6 @@ Built for AI operators: an AWK-powered terminal UI with live gRPC health, daemon
 
 Part of the [ZENS3N Systems](https://github.com/LLMasterDesign/ZENS3N) substrate hub.
 
-## TUI2GO — substrate of Hawk
-
-TUI2GO is the 2GO control surface for Hawk: **TRACT** (validate+snapshot) and **FORGE** (loop+restart) panels, mobile-layout themes, and a unified watch pipeline.
-
-![TUI2GO 2GO control panels — TRACT and FORGE](tui2go/tui2go-2go-panels.png)
-<!-- TODO: add screenshot at tui2go/tui2go-2go-panels.png when back at desktop -->
-
-→ Full docs: [tui2go/README.md](tui2go/README.md)
-
 ## Quick Links
 
 - 📚 Docs Index: [docs/INDEX.md](docs/INDEX.md)
@@ -55,7 +46,7 @@ publishers/stdin/unix ingest
    - unix socket broadcast
             |
             v
-      hawk (Rust mirror TUI)  OR  hawk_tui.py (Python operator TUI)
+      hawk (Rust mirror TUI)  OR  hawk_tui.py (Python operator TUI)  OR  TUI2GO (TRACT+FORGE)
             |
             v
       awk commands / packs / adapters
@@ -63,6 +54,15 @@ publishers/stdin/unix ingest
 
 Core stream contract is HawkFrame TSV with exactly 7 columns:
 `ts kind scope id level msg kv`
+
+## TUI2GO — substrate of Hawk
+
+TUI2GO is the 2GO control surface for Hawk: **TRACT** (validate+snapshot) and **FORGE** (loop+restart) panels, mobile-layout themes, and a unified watch pipeline.
+
+![TUI2GO 2GO control panels — TRACT and FORGE](tui2go/tui2go-2go-panels.png)
+<!-- TODO: add screenshot at tui2go/tui2go-2go-panels.png when back at desktop -->
+
+→ Full docs: [tui2go/README.md](tui2go/README.md)
 
 ## Quick Start
 
