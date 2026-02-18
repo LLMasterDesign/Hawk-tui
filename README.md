@@ -46,7 +46,7 @@ publishers/stdin/unix ingest
    - unix socket broadcast
             |
             v
-      hawk (Rust mirror TUI)  OR  hawk_tui.py (Python operator TUI)  OR  TUI2GO (TRACT+FORGE)
+      hawk (Rust mirror TUI)  OR  hawk_tui.py (Python operator TUI)  OR  TUI2GO (2GO micro-TUI surface)
             |
             v
       awk commands / packs / adapters
@@ -57,7 +57,7 @@ Core stream contract is HawkFrame TSV with exactly 7 columns:
 
 ## TUI2GO — substrate of Hawk
 
-TUI2GO is the 2GO control surface for Hawk: **TRACT** (validate+snapshot) and **FORGE** (loop+restart) panels, mobile-layout themes, and a unified watch pipeline.
+TUI2GO is a GO surface for building micro TUIs. Deploys under 5MB, stays tiny ("2GO"). May use Hawk source to build; deploys independently. **TRACT** and **FORGE** are users of it.
 
 ![TUI2GO 2GO control panels — TRACT and FORGE](tui2go/tui2go-2go-panels.png)
 <!-- TODO: add screenshot at tui2go/tui2go-2go-panels.png when back at desktop -->

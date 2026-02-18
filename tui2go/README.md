@@ -3,16 +3,13 @@
 ///▙▖▙▖▞▞▙▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂///
 ▛//▞▞ ⟦⎊⟧ :: TUI2GO // README :: 2GO substrate ▞▞
 
-2GO control surface for Hawk — TRACT and FORGE panels.
+GO surface for micro TUIs — deploys under 5MB, stays tiny ("2GO"). May use Hawk source to build; deploys independently. TRACT and FORGE are users of TUI2GO.
 
 ## Overview
 
-TUI2GO is the substrate of Hawk-tui: dual control panels for tract (validate+snapshot) and forge (loop+restart) modes, with mobile-layout themes and unified watch pipelines.
+(Needs proper spec — see TODO below.)
 
-- **TRACT CONTROL**: `tui2go-runner.sh`, validate+snapshot watch
-- **FORGE CONTROL**: `forge.sh`, loop+restart watch, hawkd + injector
-
-## Layout
+## Layout (example: TRACT and FORGE users)
 
 ```
 // 2GO ... TRACT CONTROL          // 2GO // FORGE CONTROL
@@ -43,5 +40,13 @@ This folder is structured so TUI2GO can be pulled and used independently of Hawk
 ## Photo
 
 > **TODO** — Add your TUI2GO screenshot: save as `tui2go-2go-panels.png` in this directory. The main README embeds it automatically once the file exists.
+
+## TUI2GO spec TODO (repo alignment — no personal info, no breaking others' PCs)
+
+- [ ] Spec TUI2GO: GO surface for micro TUIs, <5MB, 2GO
+- [ ] Clarify: may use Hawk source to build; deploys independently
+- [ ] Clarify: TRACT and FORGE are users of TUI2GO, not owned by it
+- [ ] Remove any remaining hardcoded paths or personal info
+- [ ] Ensure layout works on other folks' machines
 
 :: ∎
