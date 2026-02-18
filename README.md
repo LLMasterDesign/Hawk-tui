@@ -11,6 +11,7 @@ Part of the [ZENS3N Systems](https://github.com/LLMasterDesign/ZENS3N) substrate
 TUI2GO is the 2GO control surface for Hawk: **TRACT** (validate+snapshot) and **FORGE** (loop+restart) panels, mobile-layout themes, and a unified watch pipeline.
 
 ![TUI2GO 2GO control panels — TRACT and FORGE](tui2go/tui2go-2go-panels.png)
+<!-- TODO: add screenshot at tui2go/tui2go-2go-panels.png when back at desktop -->
 
 → Full docs: [tui2go/README.md](tui2go/README.md)
 

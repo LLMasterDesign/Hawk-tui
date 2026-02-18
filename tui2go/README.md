@@ -42,6 +42,6 @@ This folder is structured so TUI2GO can be pulled and used independently of Hawk
 
 ## Photo
 
-Place your TUI2GO screenshot at `tui2go-2go-panels.png` in this directory for the main README embed.
+> **TODO** — Add your TUI2GO screenshot: save as `tui2go-2go-panels.png` in this directory. The main README embeds it automatically once the file exists.
 
 :: ∎
