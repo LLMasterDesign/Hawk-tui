@@ -60,7 +60,6 @@ Core stream contract is HawkFrame TSV with exactly 7 columns:
 TUI2GO is a GO surface for building micro TUIs. Deploys under 5MB, stays tiny ("2GO"). May use Hawk source to build; deploys independently. **TRACT** and **FORGE** are users of it.
 
 ![TUI2GO 2GO control panels — TRACT and FORGE](tui2go/tui2go-2go-panels.png)
-<!-- TODO: add screenshot at tui2go/tui2go-2go-panels.png when back at desktop -->
 
 → Full docs: [tui2go/README.md](tui2go/README.md)
 

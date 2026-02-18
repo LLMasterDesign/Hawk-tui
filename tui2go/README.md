@@ -7,7 +7,7 @@ GO surface for micro TUIs — deploys under 5MB, stays tiny ("2GO"). May use Haw
 
 ## Overview
 
-(Needs proper spec — see TODO below.)
+GO surface for micro TUIs. Deploys under 5MB, stays tiny ("2GO"). May use Hawk source to build; deploys independently. TRACT and FORGE are users.
 
 ## Layout (example: TRACT and FORGE users)
 
@@ -39,14 +39,6 @@ This folder is structured so TUI2GO can be pulled and used independently of Hawk
 
 ## Photo
 
-> **TODO** — Add your TUI2GO screenshot: save as `tui2go-2go-panels.png` in this directory. The main README embeds it automatically once the file exists.
-
-## TUI2GO spec TODO (repo alignment — no personal info, no breaking others' PCs)
-
-- [ ] Spec TUI2GO: GO surface for micro TUIs, <5MB, 2GO
-- [ ] Clarify: may use Hawk source to build; deploys independently
-- [ ] Clarify: TRACT and FORGE are users of TUI2GO, not owned by it
-- [ ] Remove any remaining hardcoded paths or personal info
-- [ ] Ensure layout works on other folks' machines
+Place your TUI2GO screenshot at `tui2go-2go-panels.png` in this directory. The main README embeds it automatically.
 
 :: ∎
