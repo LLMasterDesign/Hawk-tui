@@ -4,7 +4,7 @@ Built for AI operators: an AWK-powered terminal UI with live gRPC health, daemon
 
 > If your incident workflow is 14 tabs, 3 half-broken scripts, and one cursed `tail -f`, Hawk-tui is the cleanup crew.
 
-Part of the [ZENS3N Systems substrate hub](https://github.com/LLMasterDesign/ZENS3N).
+Part of the [ZENS3N Systems](https://github.com/LLMasterDesign/ZENS3N) substrate hub.
 
 ## Quick Links
 
@@ -46,7 +46,7 @@ publishers/stdin/unix ingest
    - unix socket broadcast
             |
             v
-      hawk (Rust mirror TUI)  OR  hawk_tui.py (Python operator TUI)
+      hawk (Rust mirror TUI)  OR  hawk_tui.py (Python operator TUI)  OR  TUI2GO (2GO micro-TUI surface)
             |
             v
       awk commands / packs / adapters
@@ -54,6 +54,14 @@ publishers/stdin/unix ingest
 
 Core stream contract is HawkFrame TSV with exactly 7 columns:
 `ts kind scope id level msg kv`
+
+## TUI2GO — substrate of Hawk
+
+TUI2GO is a GO surface for building micro TUIs. Deploys under 5MB, stays tiny ("2GO"). May use Hawk source to build; deploys independently. **TRACT** and **FORGE** are users of it.
+
+![TUI2GO 2GO control panels — TRACT and FORGE](tui2go/tui2go-2go-panels.png)
+
+→ Full docs: [tui2go/README.md](tui2go/README.md)
 
 ## Quick Start
 
@@ -73,7 +81,7 @@ Optional:
 Run fake environment:
 
 ```bash
-cd /mnt/v/!CENTRAL.CMD/!LAUNCHPAD/Hawk-tui
+cd /path/to/Hawk-tui
 ./shell/run_fake.sh
 ```
 
@@ -184,7 +192,7 @@ INFO	200
 ## Run Against Real Systems
 
 ```bash
-export HAWK_GRPC_TARGETS="$(pwd)/conf/3ox.grpc.targets"
+export HAWK_GRPC_TARGETS="$(pwd)/conf/grpc.targets.example"
 export HAWK_UNITS_FILE="$(pwd)/conf/systemd_units.txt"
 ./run.sh
 ```
@@ -280,9 +288,9 @@ cargo run -p hawkd -- \
   --source none \
   --watch service.example.internal:8443,,proto.alpha \
   --grpc-tls-mode mtls \
-  --grpc-ca /etc/3ox/certs/ca.pem \
-  --grpc-cert /etc/3ox/certs/client.pem \
-  --grpc-key /etc/3ox/certs/client.key \
+  --grpc-ca /etc/hawk/certs/ca.pem \
+  --grpc-cert /etc/hawk/certs/client.pem \
+  --grpc-key /etc/hawk/certs/client.key \
   --grpc-domain service.example.internal
 ```
 

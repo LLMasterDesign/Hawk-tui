@@ -8,7 +8,7 @@ Primary goal:
 - Expose a scriptable awk command palette so AI agents can add/change monitoring behavior without rewriting UI internals.
 
 Non-goal (for now):
-- hard-coding 3ox-specific semantics into core TUI.
+- hard-coding ecosystem-specific semantics into core TUI.
 
 ## 2. Design principles
 - Command-first architecture: the TUI renders outputs from `bin/hawk-cmd` commands.
