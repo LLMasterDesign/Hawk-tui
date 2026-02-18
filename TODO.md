@@ -5,7 +5,7 @@
 - [x] Audit for remaining hardcoded paths
 - [x] Audit for personal info or machine-specific references
 - [x] Ensure examples/scripts run on other folks' PCs
-- [ ] Lint / CI if not present (no .github/ yet)
+- [x] Lint / CI if not present
 - [ ] Quote style audit: most `""` in shell are required for variable expansion; only a few pure `echo` literals could use `''` (cosmetic only; AWK/Rust use `""` by language rule)
 
 :: ∎
