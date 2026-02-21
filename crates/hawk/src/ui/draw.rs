@@ -4,7 +4,10 @@ use ratatui::{
     layout::{Constraint, Direction, Layout, Rect},
     style::{Modifier, Style},
     text::{Line, Span},
-    widgets::{Block, Borders, Cell, Paragraph, Row, Table, Wrap},
+    widgets::{
+        block::BorderType,
+        Block, Borders, Cell, Paragraph, Row, Table, Wrap,
+    },
     Frame,
 };
 
@@ -12,6 +15,15 @@ use time::format_description::well_known::Rfc3339;
 use time::OffsetDateTime;
 
 use crate::app::{App, Liveness};
+
+/// Block with borders; uses ASCII Plain borders on Windows to avoid ? from Unicode box-drawing.
+fn block(borders: Borders, title: &str) -> Block {
+    let b = Block::default().borders(borders);
+    let b = if title.is_empty() { b } else { b.title(title) };
+    #[cfg(windows)]
+    let b = b.border_type(BorderType::Plain);
+    b
+}
 
 pub fn draw_app(f: &mut Frame, app: &App) {
     let size = f.size();
@@ -53,7 +65,7 @@ fn draw_top_bar(f: &mut Frame, area: Rect, app: &App) {
     ]);
 
     let p = Paragraph::new(text)
-        .block(Block::default().borders(Borders::ALL).title("health at a glance"))
+        .block(block(Borders::ALL, "health at a glance"))
         .wrap(Wrap { trim: true });
 
     f.render_widget(p, area);
@@ -75,7 +87,7 @@ fn draw_footer(f: &mut Frame, area: Rect) {
         Span::raw("  |  "),
         Span::raw("source: stdin or unix socket (TSV HawkFrames)"),
     ]);
-    let p = Paragraph::new(text).block(Block::default().borders(Borders::TOP));
+    let p = Paragraph::new(text).block(block(Borders::TOP, ""));
     f.render_widget(p, area);
 }
 
@@ -127,7 +139,7 @@ fn draw_entity_table(f: &mut Frame, area: Rect, app: &App) {
         ],
     )
     .header(header)
-    .block(Block::default().borders(Borders::ALL).title("entities"))
+    .block(block(Borders::ALL, "entities"))
     .column_spacing(1);
 
     f.render_widget(table, area);
@@ -140,7 +152,7 @@ fn draw_tail(f: &mut Frame, area: Rect, app: &App) {
     }
 
     let p = Paragraph::new(lines)
-        .block(Block::default().borders(Borders::ALL).title("event tail"))
+        .block(block(Borders::ALL, "event tail"))
         .wrap(Wrap { trim: false });
 
     f.render_widget(p, area);

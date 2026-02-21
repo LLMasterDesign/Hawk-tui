@@ -14,6 +14,7 @@ import curses
 import json
 import os
 import subprocess
+import sys
 import textwrap
 import time
 from collections import deque
@@ -23,7 +24,22 @@ from pathlib import Path
 NAV_ITEMS = ["Overview", "gRPC", "Streams", "Commands"]
 MOTION = ["|", "/", "-", "-", "-", "-", "\\", "|"]
 MOTION_FPS = 6
-HEADER = "▛▞//"
+
+# Windows terminals often use CP437/CP850 and show ? for Unicode; use ASCII fallbacks
+_USE_ASCII = sys.platform == "win32" or os.environ.get("HAWK_ASCII", "").lower() in ("1", "true", "yes")
+HEADER = ">>//" if _USE_ASCII else "▛▞//"
+_BLOCK = "#" if _USE_ASCII else "█"
+_BOX_TL = "+" if _USE_ASCII else "┌"
+_BOX_H = "-" if _USE_ASCII else "─"
+_BOX_TR = "+" if _USE_ASCII else "┐"
+_BOX_V = "|" if _USE_ASCII else "│"
+_BOX_BL = "+" if _USE_ASCII else "└"
+_BOX_BR = "+" if _USE_ASCII else "┘"
+_MARKER_SEL = "v" if _USE_ASCII else "▾"
+_MARKER_UNSEL = ">" if _USE_ASCII else "▸"
+_BULLET = "-" if _USE_ASCII else "•"
+_DOT = "." if _USE_ASCII else "·"
+_EMOJI_MAP = {"🛰": "(*)", "🩺": ">>", "🌊": "~~", "🧰": "[*]"} if _USE_ASCII else {}
 
 CP_DEFAULT = 1
 CP_ORANGE = 2
@@ -353,7 +369,7 @@ def draw_banner(stdscr, frame):
     h, w = stdscr.getmaxyx()
     now = datetime.now().strftime("%H:%M:%S")
     text = f" Hawk-tui [{frame}] {now} "
-    fill = "█" * max(0, w - len(text) - 1)
+    fill = _BLOCK * max(0, w - len(text) - 1)
     safe_add(stdscr, 0, 0, "".ljust(w), curses.color_pair(CP_BANNER))
     safe_add(stdscr, 0, 1, text + fill, curses.A_BOLD | curses.color_pair(CP_BANNER))
 
@@ -362,8 +378,8 @@ def draw_left_nav(win, selected, flash):
     h, w = win.getmaxyx()
     pane_title(win, "NAV", accent=True)
 
-    safe_add(win, 1, 2, "████████████████████████████", curses.color_pair(CP_ORANGE))
-    safe_add(win, 2, 2, "▛▞// Hawk-tui", curses.A_BOLD | curses.color_pair(CP_ORANGE))
+    safe_add(win, 1, 2, _BLOCK * 28, curses.color_pair(CP_ORANGE))
+    safe_add(win, 2, 2, f"{HEADER} Hawk-tui", curses.A_BOLD | curses.color_pair(CP_ORANGE))
     safe_add_wrapped(
         win,
         3,
@@ -393,23 +409,24 @@ def draw_left_nav(win, selected, flash):
         is_selected = i == selected
         title_attr = curses.A_BOLD | (curses.color_pair(CP_ORANGE) if is_selected else curses.color_pair(CP_MUTED))
         frame_attr = curses.color_pair(CP_ORANGE) if is_selected else curses.color_pair(CP_DIM)
-        marker = "▾" if is_selected else "▸"
-        title = f" {i+1} {HEADER} {emoji} {label} {marker} "
+        disp_emoji = _EMOJI_MAP.get(emoji, emoji)
+        marker = _MARKER_SEL if is_selected else _MARKER_UNSEL
+        title = f" {i+1} {HEADER} {disp_emoji} {label} {marker} "
 
-        safe_add(win, row, 2, f"┌{'─' * frame_w}┐", frame_attr)
-        safe_add(win, row + 1, 2, f"│{title.ljust(frame_w)[:frame_w]}│", title_attr)
-        safe_add(win, row + 2, 2, f"└{'─' * frame_w}┘", frame_attr)
+        safe_add(win, row, 2, f"{_BOX_TL}{_BOX_H * frame_w}{_BOX_TR}", frame_attr)
+        safe_add(win, row + 1, 2, f"{_BOX_V}{title.ljust(frame_w)[:frame_w]}{_BOX_V}", title_attr)
+        safe_add(win, row + 2, 2, f"{_BOX_BL}{_BOX_H * frame_w}{_BOX_BR}", frame_attr)
         row += 3
 
         if is_selected and row + 2 < h - reserve_for_controls:
-            for sub in subs:
-                if row >= h - reserve_for_controls:
-                    break
-                safe_add_wrapped(
-                    win,
-                    row,
-                    4,
-                    f"• {sub}",
+                for sub in subs:
+                    if row >= h - reserve_for_controls:
+                        break
+                    safe_add_wrapped(
+                        win,
+                        row,
+                        4,
+                        f"{_BULLET} {sub}",
                     max(6, w - 8),
                     curses.color_pair(CP_MUTED),
                     max_lines=1,
@@ -547,7 +564,7 @@ def draw_ops(win, cache, frame):
     d.erase()
     l.erase()
 
-    safe_add(win, 1 + top_h, 1, "·" * max(0, w - 2), curses.color_pair(CP_DIM))
+    safe_add(win, 1 + top_h, 1, _DOT * max(0, w - 2), curses.color_pair(CP_DIM))
 
     safe_add(d, 0, 0, "Control plane", curses.A_BOLD | curses.color_pair(CP_ORANGE))
     ctl = list(cache.control_tail)[-max(1, top_h - 2):]
